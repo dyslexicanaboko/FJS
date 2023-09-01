@@ -1,0 +1,18 @@
+{
+  "name": "fjs",
+  "version": "1.0.0",
+  "description": "A sensible C# inspired take on JavaScript's crappier nearly unusable stock objects.",
+  "main_0": "./dist/main.js",
+  "main": "./src/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "author": "Eli Hayon",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.6.4",
+    "typescript": "^5.2.2"
+  }
+}
