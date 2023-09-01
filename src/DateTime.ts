@@ -1,3 +1,5 @@
+import { TimeSpan } from "./TimeSpan.js";
+
 //https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 export class DateTime {
@@ -27,6 +29,11 @@ export class DateTime {
     return this._dateTime.getDate();
   }
 
+  //getTime() method returns the number of milliseconds since 01/01/1970 00:00:00
+  getAsMilliseconds() : number {
+    return this._dateTime.getTime();
+  }
+
   addDays(days: number) : DateTime {
     const copy = this.cloneRef();
 
@@ -49,6 +56,12 @@ export class DateTime {
     copy.setFullYear(this.getYear() + years);
 
     return new DateTime(copy);
+  }
+
+  subtract(dateTime: DateTime) : TimeSpan {
+    const msDiff = this.getAsMilliseconds() - dateTime.getAsMilliseconds();
+
+    return new TimeSpan(msDiff);
   }
 }
 
