@@ -9,7 +9,7 @@ import { formatTimeSpan } from "./string-formats.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.timespan?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-export class TimeSpan {
+export default class TimeSpan {
   private _totalDays: number;
   private _totalHours: number;
   private _totalMinutes: number;

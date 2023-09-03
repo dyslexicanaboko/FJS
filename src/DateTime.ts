@@ -1,4 +1,4 @@
-import { TimeSpan } from "./TimeSpan.js";
+import TimeSpan from "./TimeSpan.js";
 import { FirstDayOfTheMonth } from "./constants.js";
 import { formatTimeStamp } from "./string-formats.js";
 
@@ -213,8 +213,8 @@ export default class DateTime {
     });
   }
 
-  subtract(dateTime: DateTime): TimeSpan {
-    const msDiff = this.totalMilliseconds() - dateTime.totalMilliseconds();
+  subtract(other: DateTime): TimeSpan {
+    const msDiff = this.totalMilliseconds() - other.totalMilliseconds();
 
     return new TimeSpan(msDiff);
   }

@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node dist/index",
-    "test": "tsc -d && jest"
+    "test": "tsc -d && jest",
+    "test0": "tsc -d && jest --runTestsByPath tests/TimeSpan.test.ts",
+    "test0-comment": "Run specific test suites: https://jestjs.io/docs/cli#--runtestsbypath"
   },
   "author": "Eli Hayon",
   "license": "ISC",
