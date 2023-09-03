@@ -25,7 +25,7 @@ console.log("are equal mt?", dtm2.equals(dtm3));
 
 // F5 attaches debugger (slow) - compiles and runs, but it's VERY slow
 // Ctrl + F5 runs without attaching the debugger (faster) - it will not recompile anything first!
-//https://stackoverflow.com/questions/29996145/visual-studio-code-compile-on-save
+// https://stackoverflow.com/questions/29996145/visual-studio-code-compile-on-save
 // Ctrl + Shift + B and use `tsc: watch - tsconfig.json` to start the watcher
 // Change the Run and Debug to Launch Program (fastest)
 console.log(`Finished @ ${new Date()}`);

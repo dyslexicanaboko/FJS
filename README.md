@@ -16,7 +16,7 @@ JavaScript's `Date` object is one of the most ubiquitously hated objects to use 
 JavaScript's woefully lacking `Date` object does not support reasonable date math. Therefore, there is no exact JS equivalent `TimeSpan` object unlike the wonderous joy it is to use C#'s `System.TimeSpan` struct. The closest thing that JS has is the `getTime()` function which returns the total number of milliseconds since 01/01/1970 UTC which is a designated [epoch](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-time-values-and-time-range).
 
 - [JS Date.getTime()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime)
-- [C# TimeSpan](https://learn.microsoft.com/en-us/dotnet/api/system.timespan.-ctor)
+- [C# TimeSpan](https://learn.microsoft.com/en-us/dotnet/api/system.timespan)
 
 ---
 
