@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node dist/index",
-    "test": "jest"
+    "test": "tsc -d && jest"
   },
   "author": "Eli Hayon",
   "license": "ISC",

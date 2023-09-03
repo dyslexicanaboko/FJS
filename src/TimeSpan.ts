@@ -59,47 +59,47 @@ export class TimeSpan {
     return Math.floor(target);
   }
 
-  totalMilliseconds() {
+  totalMilliseconds(): number {
     return this._totalMilliseconds;
   }
 
-  totalSeconds() {
+  totalSeconds(): number {
     return this._totalSeconds;
   }
 
-  totalMinutes() {
+  totalMinutes(): number {
     return this._totalMinutes;
   }
 
-  totalHours() {
+  totalHours(): number {
     return this._totalHours;
   }
 
-  totalDays() {
+  totalDays(): number {
     return this._totalDays;
   }
 
-  milliseconds() {
+  milliseconds(): number {
     return this._milliseconds;
   }
 
-  seconds() {
+  seconds(): number {
     return this._seconds;
   }
 
-  minutes() {
+  minutes(): number {
     return this._minutes;
   }
 
-  hours() {
+  hours(): number {
     return this._hours;
   }
 
-  days() {
+  days(): number {
     return this._days;
   }
 
-  log() {
+  log(): void {
     console.log("Total days", this._totalDays);
     console.log("Total hours", this._totalHours);
     console.log("Total minutes", this._totalMinutes);
@@ -115,7 +115,7 @@ export class TimeSpan {
 
   //C#'s output is more dynamic, but this is the basic idea: Ex: 1.23:59:59.9999980 -> Days.HH:mm:ss.fffffff
   //Years are not included in the output, just total number of days. C# won't include the days if it is zero.
-  toString() {
+  toString(): string {
     return formatTimeSpan(
       this._days,
       this._hours,
