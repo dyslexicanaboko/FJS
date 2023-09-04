@@ -5,7 +5,7 @@
 export default class List<T> {
   private _arr: Array<T>;
 
-  public constructor(array: Array<T>) {
+  public constructor(array: Array<T> = []) {
     this._arr = array;
   }
 
@@ -18,8 +18,24 @@ export default class List<T> {
     return this._arr.length;
   }
 
+  /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+   * There is another JavaScript crackhead problem I have rediscovered, but I am not sure how to deal with yet.
+   * Push will only append to the END of the array, it will not used pre-declared space if initial capacity is specified.
+   * For example, if you provide an initialized array of size 3, then push 3 elements, your array size is then 6.
+   * The crackhead array size initialization provides you with 3 elements of undefined (thanks?).
+   * Then the three items you intended to add to the array increases the size to 6.
+   * JavaScript does not have a true add function, it only has a push function which appends
+   * to the END of the array. This behavior is absolutely useless and impractical.
+   * There is a lot of banter about setting the capacity of an array:
+   * https://stackoverflow.com/questions/4852017/how-to-initialize-an-arrays-length-in-javascript */
   add(item: T): void {
     this._arr.push(item);
+    /* Idea: Use a pointer to keep track of the next available index
+     * Problems:
+     * What happens when elements are...
+     * 1. inserted at index?
+     * 2. deleted?
+     * Whole array is cleared? */
   }
 
   addRange(items: Array<T>): void {
@@ -65,6 +81,27 @@ export default class List<T> {
     this._arr.forEach((x) => {
       action(x);
     });
+  }
+
+  /* Indexer syntax doesn't appar to work on TypeScript classes. You can only use indexer syntax on interfaces,
+   * but this class cannot implement it which defeats the purpose.
+   *   https://www.typescriptlang.org/docs/handbook/2/objects.html#index-signatures
+   *   https://stackoverflow.com/a/14851245/603807
+   *
+   * //Desired TypeScript code
+   * [index: number] : T {
+   *   return this._arr[index];
+   * }
+   *
+   * It appears that in JavaScript it may be possible via a Proxy
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+   * https://stackoverflow.com/a/49095109/603807
+   * https://github.com/ayonli/indexable  //Looks more complicated than it's worth
+   * */
+  //This is a compromise for there not being user accessible indexers in TypeScript/JavaScript SDK
+  get(index: number): T {
+    //Might want to use at(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+    return this._arr[index];
   }
 
   getRange(index: number, count: number): List<T> {
@@ -159,6 +196,7 @@ export default class List<T> {
     this._arr.sort(comparer);
   }
 
+  //Can be used to access the indexer too, which is not sexy
   toArray(): Array<T> {
     return this._arr;
   }

@@ -7,9 +7,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "build-d": "tsc -d",
     "start": "tsc && node dist/index",
     "test": "tsc -d && jest",
-    "test0": "tsc -d && jest --runTestsByPath tests/TimeSpan.test.ts",
+    "test-dt": "tsc -d && jest --runTestsByPath tests/DateTime.test.ts",
+    "test-ts": "tsc -d && jest --runTestsByPath tests/TimeSpan.test.ts",
+    "test-lst": "tsc -d && jest --runTestsByPath tests/List.test.ts",
     "test0-comment": "Run specific test suites: https://jestjs.io/docs/cli#--runtestsbypath"
   },
   "author": "Eli Hayon",
