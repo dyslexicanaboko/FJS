@@ -11,19 +11,23 @@ const getList = (size: number = 0): List<number> =>
   new List<number>(getArray(size));
 
 const getArray = (size: number): Array<number> => {
-  //Initializing the array size
-  const arr = new Array<number>(size);
+  //DON'T initialize the array size! It causes a stupid problem.
+  const arr = new Array<number>(10);
 
   console.log("initialized array", arr);
 
-  for (let i = 1; i <= size; i++) {
-    arr.push(i);
-  }
+  // for (let i = 1; i <= size; i++) {
+  //   arr.push(i);
+  // }
 
   return arr;
 };
 
 const lst = getList(10);
+
+for (let i = 1; i <= 10; i++) {
+  lst.add(i);
+}
 
 console.log("List", lst);
 

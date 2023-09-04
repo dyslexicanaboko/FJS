@@ -4,9 +4,27 @@
 //https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays
 export default class List<T> {
   private _arr: Array<T>;
+  private _nextIndex: number;
 
   public constructor(array: Array<T> = []) {
     this._arr = array;
+
+    //If an array is provided with an initial capacity, then all of its elements will be `undefined`
+    if (this.any() && this._arr.every(this.allUndefined)) {
+      //In this case - overwrite everything starting at index 0
+      this._nextIndex = 0;
+    } else {
+      //If the whole array is not `undefined`, then just point to the next index at the end of the array
+      // console.warn(
+      //   "The provided array contains `undefined` elements. Was this intentional?"
+      // );
+
+      this._nextIndex = this.count();
+    }
+  }
+
+  private allUndefined(element: T): boolean {
+    return element === undefined;
   }
 
   //This comes from `System.Linq`, but it is so useful I am including it. I might move it to an extension library later.
@@ -20,22 +38,22 @@ export default class List<T> {
 
   /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
    * There is another JavaScript crackhead problem I have rediscovered, but I am not sure how to deal with yet.
-   * Push will only append to the END of the array, it will not used pre-declared space if initial capacity is specified.
-   * For example, if you provide an initialized array of size 3, then push 3 elements, your array size is then 6.
-   * The crackhead array size initialization provides you with 3 elements of undefined (thanks?).
-   * Then the three items you intended to add to the array increases the size to 6.
-   * JavaScript does not have a true add function, it only has a push function which appends
-   * to the END of the array. This behavior is absolutely useless and impractical.
+   * The push function will only append to the END of the array, it will not used pre-declared space if initial
+   * capacity is specified. For example, if you provide an initialized array of size 3, then push 3 elements,
+   * your array size is then 6. The crackhead array size initialization provides you with 3 elements of undefined (thanks?).
+   * Then the 3 items you intended to add to the array increases the size to 6.
+   *
+   * JavaScript does not have a true add function, therefore you must overwrite items by index.
    * There is a lot of banter about setting the capacity of an array:
    * https://stackoverflow.com/questions/4852017/how-to-initialize-an-arrays-length-in-javascript */
   add(item: T): void {
-    this._arr.push(item);
-    /* Idea: Use a pointer to keep track of the next available index
-     * Problems:
-     * What happens when elements are...
-     * 1. inserted at index?
-     * 2. deleted?
-     * Whole array is cleared? */
+    //Through the power of crackhead magic, this syntax functions as two things:
+    //1. Store the supplied item at this index (overwrite).
+    //2. Add a new element to the end of the array and increase the array's size by one
+    //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a queue.
+    this._arr[this._nextIndex] = item;
+
+    this._nextIndex++;
   }
 
   addRange(items: Array<T>): void {
@@ -51,6 +69,8 @@ export default class List<T> {
     for (let i = 0; i < count; i++) {
       this._arr.pop();
     }
+
+    this._nextIndex = 0;
   }
 
   contains(item: T): boolean {
@@ -134,7 +154,13 @@ export default class List<T> {
 
     const deleted = this._arr.splice(i, 1);
 
-    return !deleted || deleted.length === 0;
+    if (deleted && deleted.length > 0) {
+      this._nextIndex--;
+
+      return true;
+    }
+
+    return false;
   }
 
   removaAll(predicate: (item: T) => boolean): number {
@@ -156,10 +182,14 @@ export default class List<T> {
 
   removeAt(index: number): void {
     this._arr.splice(index, 1);
+
+    this._nextIndex--;
   }
 
   removeRange(index: number, count: number): void {
     this._arr.splice(index, count);
+
+    this._nextIndex = this.count();
   }
 
   reverse(): void {
@@ -202,5 +232,6 @@ export default class List<T> {
   }
 
   //Not sure I can implement this considering JS can't really do it
+  //I will try to look into it last
   //trimExcess
 }
