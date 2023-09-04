@@ -14,11 +14,6 @@ export default class List<T> {
       //In this case - overwrite everything starting at index 0
       this._nextIndex = 0;
     } else {
-      //If the whole array is not `undefined`, then just point to the next index at the end of the array
-      // console.warn(
-      //   "The provided array contains `undefined` elements. Was this intentional?"
-      // );
-
       this._nextIndex = this.count();
     }
   }
@@ -89,7 +84,7 @@ export default class List<T> {
     return this._arr.find(predicate);
   }
 
-  findAll(predicate: (item: T) => boolean): List<T> | undefined {
+  findAll(predicate: (item: T) => boolean): List<T> {
     return new List<T>(this._arr.filter(predicate));
   }
 
@@ -136,15 +131,33 @@ export default class List<T> {
     return this._arr.indexOf(item);
   }
 
+  private isInBounds(index: number): void {
+    if (index < 0) {
+      throw new Error("Index must be greater than or equal to zero.");
+    }
+
+    if (index > this.count()) {
+      throw new Error("Index must be within the bounds of the List.");
+    }
+  }
+
   insert(index: number, item: T): void {
+    this.isInBounds(index);
+
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     //It has always pissed me off that this was so similarly named to `slice`, also why not just call it `insert`?
     //Tells me the person who designed this was probably working with cassette tapes.
     this._arr.splice(index, 0, item);
+
+    this._nextIndex++;
   }
 
   insertRange(index: number, items: T[]): void {
+    this.isInBounds(index);
+
     this._arr.splice(index, 0, ...items);
+
+    this._nextIndex = this.count();
   }
 
   remove(item: T): boolean {
