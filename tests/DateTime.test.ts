@@ -54,9 +54,37 @@ test("Given some date, When one year is added, Then the n+1 is returned", () => 
   expect(dateN0.addYears(1).year()).toBe(2024);
 });
 
-test("Given some date, When one month is added, Then the n+1 is returned", () => {
+test("Given some date before the twenty-eigth day of the month, When one month is added, Then the following month is returned using the provided day of the original date", () => {
+  //First of the month
+  expect(DateTime.parse("2024-05-01 00:00:00.000").addMonths(1)).toStrictEqual(
+    DateTime.parse("2024-06-01 00:00:00.000")
+  );
+
+  //Twenty-seventh of the month
+  expect(DateTime.parse("2024-06-27 00:00:00.000").addMonths(1)).toStrictEqual(
+    DateTime.parse("2024-07-27 00:00:00.000")
+  );
+});
+
+test("Given some date on the last day of the month, When one month is added, Then the following month is returned using its last day of its month", () => {
+  //Normal year - 2023 is not a leap year
+  expect(DateTime.parse("2023-01-31 00:00:00.000").addMonths(1)).toStrictEqual(
+    DateTime.parse("2023-02-28 00:00:00.000")
+  );
+
+  //Dreaded leap year - 2024 is a leap year
   expect(DateTime.parse("2024-01-31 23:59:59.999").addMonths(1)).toStrictEqual(
     DateTime.parse("2024-02-29 23:59:59.999")
+  );
+
+  // April has 30 days, May has 31 days, can take 30 because 30 < 31
+  expect(DateTime.parse("2023-04-30 00:00:00.000").addMonths(1)).toStrictEqual(
+    DateTime.parse("2023-05-30 00:00:00.000")
+  );
+
+  // May has 31 days, June has 30 days, must take 30 because 31 !< 30
+  expect(DateTime.parse("2023-05-31 00:00:00.000").addMonths(1)).toStrictEqual(
+    DateTime.parse("2023-06-30 00:00:00.000")
   );
 });
 

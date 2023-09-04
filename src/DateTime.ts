@@ -1,5 +1,5 @@
 import TimeSpan from "./TimeSpan.js";
-import { FirstDayOfTheMonth } from "./constants.js";
+import { FirstDayOfTheMonth, GreatestCommonDayOfMonth } from "./constants.js";
 import { formatTimeStamp } from "./string-formats.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0
@@ -48,6 +48,11 @@ export default class DateTime {
     return now.date();
   }
 
+  //https://stackoverflow.com/a/16353241/603807
+  static isLeapYear(year: number): boolean {
+    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+  }
+
   //Reference to the Date object that is keeping track of everything
   dateRef(): Date {
     return this._dateTime;
@@ -81,11 +86,21 @@ export default class DateTime {
     return this._dateTime.getMonth();
   }
 
+  public static daysInMonth(year: number, month: number): number {
+    const crackHeadMonthIndex = month - 1;
+
+    const d = new Date(year, crackHeadMonthIndex + 1, FirstDayOfTheMonth);
+
+    d.setDate(d.getDate() - 1);
+
+    return d.getDate();
+  }
+
   /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMonth
    * The setMonth() method of Date instances changes the month and/or day of the month for this date
    * according to local time.
    *
-   * And just like how getMonth() works, which is by index, setMonth() takes and index value 0 - 11 because
+   * And just like how getMonth() works, which is by index, setMonth() takes an index value 0 - 11 because
    * when you are on crack this makes sense. */
   //Cardinal Month means 1 - 12 like the rest of the planet is used to.
   private static setMonth(date: Date, cardinalMonth: number): void {
@@ -95,10 +110,9 @@ export default class DateTime {
      *  I have January index 0 and I want to move this to February index 1 then using normal human math that would be
      *  a cardinal 1 to represent January and a cardinal 1 to add one month unit yielding a 2 to represent February.
      *    setMonth(1 + 1 - 1) -> setMonth(1)
-     *  This would be too easy if that were all. */
-    const crackHeadMonthIndex = cardinalMonth - 1;
-
-    /* Unfortunately, the crackheadedness continues. When working with the last day of the month edge case JavaScript
+     *  This would be too easy if that were all.
+     *
+     * Unfortunately, the crackheadedness continues. When working with the last day of the month edge case JavaScript
      * will add all days included in the current date and roll the whole date over to whatever that sum is. This is
      * instead of just using the last day of the destination month like one would assume SETTING A MONTH MEANS.
      *
@@ -113,15 +127,33 @@ export default class DateTime {
      *
      * To deal with the unwelcomed rollover of days no one asked for, the last day of the destination month is
      * determined. This way it prevents the rollover from happening. This is done by using the older than dirt
-     * method of plus one month minus one day to get the last day of the prior month (destination month). */
-    const lastDayOfMonth = new Date(
-      date.getFullYear(),
-      crackHeadMonthIndex + 1,
-      FirstDayOfTheMonth
-    );
-    lastDayOfMonth.setDate(lastDayOfMonth.getDate() - 1);
+     * method of plus one month minus one day to get the last day of the prior month (destination month).
+     *
+     * A check has to be performed to see if the current day is less than the last day of the destination month
+     *  Days 01 - 27 are common to all months, therefore they will be taken for the transfer at face value
+     *  Days 28 - 31 are questionable depending on the month and leap year
+     *  Normal year February has 28 days - Ex: 02/28/2023
+     *  Leap year   February has 29 days - Ex: 02/29/2024 */
+    const crackHeadMonthIndex = cardinalMonth - 1;
+    const currentDay = date.getDate();
+    let day: number;
 
-    date.setMonth(crackHeadMonthIndex, lastDayOfMonth.getDate());
+    if (currentDay <= GreatestCommonDayOfMonth) {
+      day = currentDay;
+    } else {
+      const lastDayOfDestinationMonth = this.daysInMonth(
+        date.getFullYear(),
+        cardinalMonth
+      );
+
+      //Further optimizations can be made here, but I don't see it as being worth it.
+      day =
+        currentDay < lastDayOfDestinationMonth
+          ? currentDay
+          : lastDayOfDestinationMonth;
+    }
+
+    date.setMonth(crackHeadMonthIndex, day);
   }
 
   month(): number {
@@ -148,13 +180,12 @@ export default class DateTime {
     return this._dateTime.getMilliseconds();
   }
 
-  /* getTime() method returns the number of milliseconds since 01/01/1970 00:00:00
+  /* getTime() method returns the number of milliseconds since 01/01/1970 00:00:00 UTC
    
    Milliseconds is going to be as close as we can get to ticks.
    https://learn.microsoft.com/en-us/dotnet/api/system.datetime.ticks?view=net-7.0#remarks
    A single tick represents one hundred nanoseconds or one ten-millionth of a second.
-   There are 10,000 ticks in a millisecond (see TicksPerMillisecond) and 10 million ticks in a second.
-   */
+   There are 10,000 ticks in a millisecond (see TicksPerMillisecond) and 10 million ticks in a second. */
   private totalMilliseconds(): number {
     return this._dateTime.getTime();
   }
