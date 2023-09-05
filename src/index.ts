@@ -23,17 +23,11 @@ const getArray = (size: number): Array<number> => {
   return arr;
 };
 
-const lst = new List<number>([1, 3]);
+const lst = new List<number>([1, 2, 3, 4, 5, 6]);
 
-lst.insertRange(-1, [1]);
+lst.removeRange(2, 3);
 
 console.log("List", lst);
-
-if (true) {
-  throw new Error("Bogus error");
-}
-
-console.log("Should not see this line");
 
 // F5 attaches debugger (slow) - compiles and runs, but it's VERY slow
 // Ctrl + F5 runs without attaching the debugger (faster) - it will not recompile anything first!

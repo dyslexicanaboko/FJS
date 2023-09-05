@@ -9,7 +9,7 @@ export default class List<T> {
   public constructor(array: Array<T> = []) {
     this._arr = array;
 
-    //If an array is provided with an initial capacity, then all of its elements will be `undefined`
+    //If an array is provided with an initial capacity, then all of its elements will be `undefined` because JavaScript
     if (this.any() && this._arr.every(this.allUndefined)) {
       //In this case - overwrite everything starting at index 0
       this._nextIndex = 0;
@@ -176,7 +176,7 @@ export default class List<T> {
     return false;
   }
 
-  removaAll(predicate: (item: T) => boolean): number {
+  removeAll(predicate: (item: T) => boolean): number {
     var found = this.findAll(predicate);
 
     if (!found) return 0;
@@ -194,12 +194,16 @@ export default class List<T> {
   }
 
   removeAt(index: number): void {
+    this.isInBounds(index);
+
     this._arr.splice(index, 1);
 
     this._nextIndex--;
   }
 
   removeRange(index: number, count: number): void {
+    this.isInBounds(index);
+
     this._arr.splice(index, count);
 
     this._nextIndex = this.count();
@@ -229,7 +233,7 @@ export default class List<T> {
     return 1;
   }
 
-  sort(comparison: (left: T, right: T) => number | undefined): void {
+  sort(comparison?: (left: T, right: T) => number): void {
     let comparer;
 
     if (!comparison) {
@@ -244,7 +248,14 @@ export default class List<T> {
     return this._arr;
   }
 
-  //Not sure I can implement this considering JS can't really do it
-  //I will try to look into it last
+  /* I cannot implement this function considering JS can't do it. There isn't really a way to track excess capacity in JS.
+   * Managed arrays (List<T>) in C# have a concept of capacity and count. Capacity is the total size of the array, count is the
+   * number of elements in the array. The closest we can get to the concept of excess capacity in a JS array is having undefined
+   * elements. The problem is it is that it is not possible to tell the difference between elements that are intentionally
+   * undefined and an element that is undefined because it was never initialized as such.
+   *
+   * The only rational thing I can think of is to purge all undefined elements when working with primitives only. This is not
+   * going to be acceptable for complex types since they can legitamately be undefined. */
+  //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.trimexcess
   //trimExcess
 }
