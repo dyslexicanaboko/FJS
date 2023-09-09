@@ -1,6 +1,6 @@
 import IObject from "./IObject.js";
 
-export default class TestObject implements IObject<TestObject> {
+export default class ComparableObject implements IObject<ComparableObject> {
   private _someNumber: number;
 
   public constructor(someNumber: number) {
@@ -15,7 +15,7 @@ export default class TestObject implements IObject<TestObject> {
     this._someNumber = someNumber;
   }
 
-  equals(other: TestObject) {
+  equals(other: ComparableObject) {
     return this._someNumber === other.someNumber;
   }
 
@@ -24,6 +24,6 @@ export default class TestObject implements IObject<TestObject> {
   }
 
   toString(): string {
-    return Object.prototype.toString();
+    return `TestObject: ${this._someNumber}`;
   }
 }

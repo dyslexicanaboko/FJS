@@ -2,30 +2,26 @@
 //import { DateTime } from "./DateTime.js";
 import DateTime from "./DateTime.js";
 import List from "./List.js";
+import ComparableObject from "./ComparableObject.js";
 
 /*
   Permanent tests need to be put into Jest
   Use this space for debugging only.
 */
-const getList = (size: number = 0): List<number> =>
-  new List<number>(getArray(size));
 
-const getArray = (size: number): Array<number> => {
-  //DON'T initialize the array size! It causes a stupid problem.
-  const arr = new Array<number>(10);
+const getArray = (size: number): Array<ComparableObject> => {
+  const arr = new Array<ComparableObject>(size);
 
   console.log("initialized array", arr);
 
-  // for (let i = 1; i <= size; i++) {
-  //   arr.push(i);
-  // }
+  for (let i = 1; i <= size; i++) {
+    arr[i] = new ComparableObject(i);
+  }
 
   return arr;
 };
 
-const lst = new List<number>([1, 2, 3, 4, 5, 6]);
-
-lst.removeRange(2, 3);
+const lst = new List<ComparableObject>(getArray(10));
 
 console.log("List", lst);
 
