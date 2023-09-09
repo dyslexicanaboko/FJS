@@ -3,8 +3,10 @@ import IObject from "./IObject.js";
 export default class ComparableObject implements IObject<ComparableObject> {
   private _someNumber: number;
 
-  public constructor(someNumber: number) {
-    this._someNumber = someNumber;
+  public constructor();
+  public constructor(someNumber: number);
+  public constructor(someNumber?: number) {
+    this._someNumber = someNumber ?? 0;
   }
 
   get someNumber(): number {
@@ -21,9 +23,5 @@ export default class ComparableObject implements IObject<ComparableObject> {
 
   getHashCode(): number {
     return -7;
-  }
-
-  toString(): string {
-    return `TestObject: ${this._someNumber}`;
   }
 }

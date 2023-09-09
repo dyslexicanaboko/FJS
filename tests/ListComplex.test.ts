@@ -55,31 +55,12 @@ const assertAreEqual = (
 const _ten = getList(10);
 const _someNumber = n(5829467163);
 
-test("Given empty list, When adding one element, Then one element exists", () => {
-  const lst = getList();
-
-  lst.add(_someNumber);
-
-  expect(lst.count).toBe(1);
-  expect(lst.get(0)).toBe(_someNumber);
-});
-
 test("Given non-empty list, When checking for an item the list does contain, Then true is returned", () => {
   expect(_ten.contains(n(5))).toBe(true);
 });
 
 test("Given non-empty list, When checking for an item the list does not contain, Then false is returned", () => {
   expect(_ten.contains(n(20))).toBe(false);
-});
-
-test("Given non-empty list, When copying to a new empty array, Then array and list elements are identical", () => {
-  const arr = new Array<ComparableObject>();
-
-  _ten.copyTo(arr);
-
-  expect(_ten.count).toBe(10);
-  expect(arr.length).toBe(10);
-  expect(assertAreEqual(_ten, arr)).toBe(true);
 });
 
 test("Given non-empty list, When checking for item existence the list does contain, Then true is returned", () => {

@@ -1,3 +1,5 @@
+import ElementType from "./ElementType.js";
+
 //https://learn.microsoft.com/en-us/dotnet/api/system.array
 //https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
@@ -16,6 +18,34 @@ export default class List<T> {
     } else {
       this._nextIndex = this.count;
     }
+  }
+
+  /* There isn't an available way to check if the type T being passed into this class:
+   *   1. implements an interface
+   *   2. extends another class
+   *   3. is a primitive type
+   *
+   * There isn't a way to instantiate a type of T either. Doesn't matter if there is a
+   * default constructor.
+   *
+   * There is no way to check if type T may or may not have a function with a particular name.
+   * Therefore, I am using the old hacky JavaScript way of testing incoming objects as though
+   * they are anonymous to gain lee way. I hope TypeScript improves this in the future. */
+  private static hasEqualsFunction(item: any): boolean {
+    return typeof item.equals === "function";
+  }
+
+  //I am going to use an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
+  //TODO: I ran into a problem where the array did not have a zero index. I think raising an error
+  //is the best option at the moment.
+  private linearSearch(item: any): ElementType<T> {
+    for (let i = 0; i < this.count; i++) {
+      const found = this._arr[i];
+
+      if (item.equals(found)) return { index: i, value: found };
+    }
+
+    return { index: -1, value: undefined };
   }
 
   private allUndefined(element: T): boolean {
@@ -82,6 +112,10 @@ export default class List<T> {
   }
 
   contains(item: T): boolean {
+    if (List.hasEqualsFunction(item)) {
+      return this.linearSearch(item).value !== undefined;
+    }
+
     return this._arr.includes(item);
   }
 
@@ -141,6 +175,10 @@ export default class List<T> {
   }
 
   indexOf(item: T): number {
+    if (List.hasEqualsFunction(item)) {
+      return this.linearSearch(item).index;
+    }
+
     return this._arr.indexOf(item);
   }
 

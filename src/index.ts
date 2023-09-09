@@ -14,7 +14,7 @@ const getArray = (size: number): Array<ComparableObject> => {
 
   console.log("initialized array", arr);
 
-  for (let i = 1; i <= size; i++) {
+  for (let i = 0; i < size; i++) {
     arr[i] = new ComparableObject(i);
   }
 
@@ -22,8 +22,9 @@ const getArray = (size: number): Array<ComparableObject> => {
 };
 
 const lst = new List<ComparableObject>(getArray(10));
-
 console.log("List", lst);
+
+console.log("Contains 5", lst.contains(new ComparableObject(5)));
 
 //lst.add(undefined);
 
