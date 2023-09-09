@@ -4,8 +4,8 @@ import {
   SecondsInOneMinute,
   MillisecondsInOneSecond,
   HoursInOneDay,
-} from "./constants.js";
-import { formatTimeSpan } from "./string-formats.js";
+} from "../constants.js";
+import { formatTimeSpan } from "../string-formats.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.timespan?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date

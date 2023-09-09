@@ -32,7 +32,7 @@ const toList = (array: Array<number>): List<ComparableObject> => {
 };
 
 const toArray = (list: Array<number>): Array<ComparableObject> => {
-  const arr = new Array<ComparableObject>(list.length);
+  const arr = new Array<ComparableObject>();
 
   list.forEach((x) => {
     arr.push(n(x));
@@ -46,7 +46,7 @@ const assertAreEqual = (
   expected: Array<ComparableObject>
 ): boolean => {
   for (let i = 0; i < actual.count; i++) {
-    if (actual.get(i) !== expected[i]) return false;
+    if (actual.get(i).notEquals(expected[i])) return false;
   }
 
   return true;
@@ -64,23 +64,25 @@ test("Given non-empty list, When checking for an item the list does not contain,
 });
 
 test("Given non-empty list, When checking for item existence the list does contain, Then true is returned", () => {
-  expect(_ten.exists((x) => x > n(5))).toBe(true);
+  expect(_ten.exists((x) => x.someNumber > n(5).someNumber)).toBe(true);
 });
 
 test("Given non-empty list, When checking for item existence the list does not contain, Then false is returned", () => {
-  expect(_ten.exists((x) => x > n(20))).toBe(false);
+  expect(_ten.exists((x) => x.someNumber > n(20).someNumber)).toBe(false);
 });
 
 test("Given non-empty list, When finding item the list does contains, Then item is returned", () => {
-  expect(_ten.find((x) => x === n(5))).toBe(n(5));
+  expect(_ten.find((x) => x.someNumber === n(5).someNumber)?.someNumber).toBe(
+    5
+  );
 });
 
 test("Given non-empty list, When finding item the list does not contains, Then undefined is returned", () => {
-  expect(_ten.find((x) => x === n(20))).toBe(undefined);
+  expect(_ten.find((x) => x.someNumber === n(20).someNumber)).toBe(undefined);
 });
 
 test("Given non-empty list, When finding all items the list does contain, Then all items are returned", () => {
-  const actual = _ten.findAll((x) => x <= n(5));
+  const actual = _ten.findAll((x) => x.someNumber <= n(5).someNumber);
 
   expect(actual.count).toBe(5);
 
@@ -90,13 +92,13 @@ test("Given non-empty list, When finding all items the list does contain, Then a
 });
 
 test("Given non-empty list, When finding all items the list does not contain, Then zero items are returned", () => {
-  const actual = _ten.findAll((x) => x > n(20));
+  const actual = _ten.findAll((x) => x.someNumber > n(20).someNumber);
 
   expect(actual.any()).toBe(false);
 });
 
 test("Given non-empty list, When finding index of item by searching criteria the list does contains, Then index is returned", () => {
-  expect(_ten.findIndex((x) => x === n(5))).toBe(4);
+  expect(_ten.findIndex((x) => x.someNumber === n(5).someNumber)).toBe(4);
 });
 
 test("Given non-empty list, When finding index of item by searching criteria the list does not contain, Then negative one is returned", () => {
@@ -105,7 +107,7 @@ test("Given non-empty list, When finding index of item by searching criteria the
 
 test("Given list of ones, When using foreach to increment each element by one, Then each element is two", () => {
   const actual = toList([1, 1, 1]);
-  const expected = toArray([1, 1, 1]);
+  const expected = toArray([2, 2, 2]);
 
   actual.forEach((x) => {
     x.someNumber++;
@@ -134,14 +136,14 @@ test("Given list with one item, When removing the item, Then true is returned an
 test("Given non-empty list, When removing the items by search criteria the list contains, Then the number of items removed is returned", () => {
   const lst = getList(10);
 
-  expect(lst.removeAll((x) => x > n(5))).toBe(5);
+  expect(lst.removeAll((x) => x.someNumber > n(5).someNumber)).toBe(5);
   expect(lst.count).toBe(5);
 });
 
 test("Given non-empty list, When removing the items by search criteria the list does not contains, Then the number of items removed is zero", () => {
   const lst = getList(10);
 
-  expect(lst.removeAll((x) => x > n(15))).toBe(0);
+  expect(lst.removeAll((x) => x.someNumber > n(15).someNumber)).toBe(0);
   expect(lst.count).toBe(10);
 });
 
@@ -183,16 +185,25 @@ test("Given non-empty list, When removing a range of items by out of bound index
   }).toThrow();
 });
 
-test("Given non-empty list in descending order, When sorting the list using default compare, Then the list is sorted in ascending order", () => {
+test("Given non-empty list in descending order, When sorting the list using default compare, Then the list cannot be sorted", () => {
   const actual = toList([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
   const expected = getArray(10);
 
   actual.sort();
 
-  expect(assertAreEqual(actual, expected)).toBe(true);
+  expect(assertAreEqual(actual, expected)).toBe(false);
 });
 
-test("Given non-empty list of unordered items, When sorting the list using default compare, Then the list is sorted in ascending order", () => {
+test("Given non-empty list in descending order, When sorting the list using IComparable<T>, Then the list cannot be sorted", () => {
+  const actual = toList([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+  const expected = getArray(10);
+
+  actual.sort();
+
+  expect(assertAreEqual(actual, expected)).toBe(false);
+});
+
+test("Given non-empty list of unordered items, When sorting the list using IComparable<T>, Then the list is sorted in ascending order", () => {
   const actual = toList([10, 1, 5, 7, 3, 9, 4, 8, 2, 6]);
   const expected = getArray(10);
 

@@ -1,6 +1,6 @@
 import TimeSpan from "./TimeSpan.js";
-import { FirstDayOfTheMonth, GreatestCommonDayOfMonth } from "./constants.js";
-import { formatTimeStamp } from "./string-formats.js";
+import { FirstDayOfTheMonth, GreatestCommonDayOfMonth } from "../constants.js";
+import { formatTimeStamp } from "../string-formats.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date

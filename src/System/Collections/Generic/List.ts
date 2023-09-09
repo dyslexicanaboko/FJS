@@ -1,4 +1,4 @@
-import ElementType from "./ElementType.js";
+import ElementType from "../../ElementType.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.array
 //https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
