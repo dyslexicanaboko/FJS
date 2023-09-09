@@ -8,31 +8,31 @@ const _today = DateTime.parse("2023-08-09 07:07:07.007");
 const _tomorrow = DateTime.parse("2023-08-10 07:07:07.007");
 
 test("Given some date, When year is YYYY, Then a four digit year YYYY is returned", () => {
-  expect(_today.year()).toBe(2023);
+  expect(_today.year).toBe(2023);
 });
 
 test("Given some date, When month is 0M, Then s single digit month M is returned", () => {
-  expect(_today.month()).toBe(8);
+  expect(_today.month).toBe(8);
 });
 
 test("Given some date, When day is 0d, Then a single digit day d is returned", () => {
-  expect(_today.day()).toBe(9);
+  expect(_today.day).toBe(9);
 });
 
 test("Given some date, When hour is 0H, Then a single digit hour H is returned", () => {
-  expect(_today.hour()).toBe(7);
+  expect(_today.hour).toBe(7);
 });
 
 test("Given some date, When minute is 0m, Then a single digit minute m is returned", () => {
-  expect(_today.minute()).toBe(7);
+  expect(_today.minute).toBe(7);
 });
 
 test("Given some date, When second is 0s, Then a single digit second s is returned", () => {
-  expect(_today.second()).toBe(7);
+  expect(_today.second).toBe(7);
 });
 
 test("Given some date, When millisecond is 00f, Then a single digit millisecond f is returned", () => {
-  expect(_today.second()).toBe(7);
+  expect(_today.second).toBe(7);
 });
 
 test("Given some date, When one day is subtracted, Then yesterday's date is returned", () => {
@@ -51,7 +51,7 @@ const dateN0 = DateTime.parse("2023-12-31 23:59:59.999");
 
 //The following are all focused on rolling a date over from one edge to the next
 test("Given some date, When one year is added, Then the n+1 is returned", () => {
-  expect(dateN0.addYears(1).year()).toBe(2024);
+  expect(dateN0.addYears(1).year).toBe(2024);
 });
 
 test("Given some date before the twenty-eigth day of the month, When one month is added, Then the following month is returned using the provided day of the original date", () => {

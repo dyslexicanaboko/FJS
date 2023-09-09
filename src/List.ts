@@ -14,7 +14,7 @@ export default class List<T> {
       //In this case - overwrite everything starting at index 0
       this._nextIndex = 0;
     } else {
-      this._nextIndex = this.count();
+      this._nextIndex = this.count;
     }
   }
 
@@ -22,14 +22,27 @@ export default class List<T> {
     return element === undefined;
   }
 
+  //Keeping this for now because I might need it later
+  // private isNull(item: any): void {
+  //   if (item === null || item === undefined) {
+  //     throw new Error("Object cannot be null or undefined.");
+  //   }
+  // }
+
   //This comes from `System.Linq`, but it is so useful I am including it. I might move it to an extension library later.
   any(): boolean {
-    return this.count() > 0;
+    return this.count > 0;
   }
 
-  count(): number {
+  get count(): number {
     return this._arr.length;
   }
+
+  //I considered implementing this method to mimic the Capacity property, but there isn't really an
+  //equivalent in JavaScript without going through a lot of trouble for the sake of it and no gain.
+  // capacity(): number {
+  //   return this._arr.length;
+  // }
 
   /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
    * There is another JavaScript crackhead problem I have rediscovered, but I am not sure how to deal with yet.
@@ -58,7 +71,7 @@ export default class List<T> {
   }
 
   clear(): void {
-    const count = this.count();
+    const count = this.count;
 
     //Pop everything off into the ether
     for (let i = 0; i < count; i++) {
@@ -136,7 +149,7 @@ export default class List<T> {
       throw new Error("Index must be greater than or equal to zero.");
     }
 
-    if (index > this.count()) {
+    if (index > this.count) {
       throw new Error("Index must be within the bounds of the List.");
     }
   }
@@ -157,7 +170,7 @@ export default class List<T> {
 
     this._arr.splice(index, 0, ...items);
 
-    this._nextIndex = this.count();
+    this._nextIndex = this.count;
   }
 
   remove(item: T): boolean {
@@ -206,7 +219,7 @@ export default class List<T> {
 
     this._arr.splice(index, count);
 
-    this._nextIndex = this.count();
+    this._nextIndex = this.count;
   }
 
   reverse(): void {
@@ -248,14 +261,27 @@ export default class List<T> {
     return this._arr;
   }
 
-  /* I cannot implement this function considering JS can't do it. There isn't really a way to track excess capacity in JS.
-   * Managed arrays (List<T>) in C# have a concept of capacity and count. Capacity is the total size of the array, count is the
-   * number of elements in the array. The closest we can get to the concept of excess capacity in a JS array is having undefined
-   * elements. The problem is it is that it is not possible to tell the difference between elements that are intentionally
-   * undefined and an element that is undefined because it was never initialized as such.
+  /* I was on the fence about implementing this function considering JS can't really do it. There isn't really a way to track
+   * excess capacity in JS. Managed arrays (List<T>) in C# have a concept of capacity and count. Capacity is the total size of
+   * the array, count is the number of elements in the array. The closest we can get to the concept of excess capacity in a
+   * JS array is having undefined elements. The problem is it is that it is not possible to tell the difference between elements
+   * that are intentionally undefined and an element that is undefined because it was never initialized as such.
    *
-   * The only rational thing I can think of is to purge all undefined elements when working with primitives only. This is not
-   * going to be acceptable for complex types since they can legitamately be undefined. */
+   * The only rational thing I can think of is to purge all undefined elements when working with primitives only.
+   * My original hang up was that this is not going to be acceptable for complex types since they can legitamately be undefined.
+   * But then I started thinking about how C# 8 handles things and realized I can make the same excuses it makes. TypeScript
+   * already does this where it doesn't allow for undefined unless explicitly allowed. This is the same idea as nullable
+   * reference types. Like a nullable string. */
   //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.trimexcess
-  //trimExcess
+  trimExcess(): void {
+    //If the array is empty, then there is no excess capacity to trim
+    if (!this.any()) return;
+
+    //If the array is full, then there is no excess capacity to trim
+    if (this.count === this._arr.length) return;
+
+    //Find all undefined elements and remove them. The only way undefined elements can get into the List is if
+    //the initial array provided has its size set.
+    this.removeAll(this.allUndefined);
+  }
 }
