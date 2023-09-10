@@ -9,9 +9,17 @@ import KeyValuePair from "./KeyValuePair.js";
 export default class Dictionary<TKey, TValue> {
   private _map: Map<TKey, TValue>;
   private _comparer: IEqualityComparer<TKey> | undefined;
+  private _useDefaultComparer: boolean;
 
-  public constructor(map: Map<TKey, TValue>) {
-    this._map = map;
+  public constructor(map: Map<TKey, TValue>);
+  public constructor(map: undefined, compare: IEqualityComparer<TKey>);
+  public constructor(
+    map?: Map<TKey, TValue>,
+    compare?: IEqualityComparer<TKey> | undefined
+  ) {
+    this._map = map ?? new Map<TKey, TValue>();
+    this._comparer = compare;
+    this._useDefaultComparer = compare === undefined;
   }
 
   any(): boolean {
