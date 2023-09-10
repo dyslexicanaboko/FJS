@@ -1,6 +1,6 @@
 //https://medium.com/nerd-for-tech/testing-typescript-with-jest-290eaee9479d
 //const DateTime = require("../dist/DateTime");
-import DateTime from "../dist/DateTime.js";
+import DateTime from "../dist/System/DateTime.js";
 
 //Arbitrary dates - think of them as "some date" for argument's sake
 const _yesterday = DateTime.parse("2023-08-08 07:07:07.007");

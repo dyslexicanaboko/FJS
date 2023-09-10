@@ -1,4 +1,5 @@
 import ElementType from "../../ElementType.js";
+import { defaultComparer } from "../../../utils.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.array
 //https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
@@ -33,6 +34,10 @@ export default class List<T> {
    * they are anonymous to gain lee way. I hope TypeScript improves this in the future. */
   private static hasEqualsFunction(item: any): boolean {
     return typeof item.equals === "function";
+  }
+
+  private static hasCompareToFunction(item: any): boolean {
+    return typeof item.compareTo === "function";
   }
 
   //I am going to use an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
@@ -264,34 +269,36 @@ export default class List<T> {
     this._arr.reverse();
   }
 
-  //Is left -1 <, 1 >, 0 = then right
-  private defaultComparer(left: T, right: T): number {
-    //If both are undefined then left = right
-    if (!left && !right) return 0;
-
-    //If left is undefined then left < right
-    if (!left) return -1;
-
-    //If right is undefined then left > right
-    if (!right) return 1;
-
-    //If neither is undefined, then do a proper compare
-    if (left < right) return -1;
-
-    if (left === right) return 0;
-
-    //if(left > right)
-    return 1;
-  }
-
   sort(comparison?: (left: T, right: T) => number): void {
-    let comparer;
+    if (!this.any()) return;
 
-    if (!comparison) {
-      comparer = this.defaultComparer;
+    //Plan A. If the user provided a comparison function then use it
+    if (comparison) {
+      this._arr.sort(comparison);
+
+      return;
     }
 
-    this._arr.sort(comparer);
+    //Otherwise, Plan B. attempt to use `IComparable<T>` from item of type T
+    //Pull any surrogate item to test with, hopefully it's not undefined (WIP)
+    let item = this.get(0);
+
+    if (item) {
+      //Check if the item has a compareTo function
+      if (List.hasCompareToFunction(item)) {
+        comparison = (left: T, right: T) => {
+          return (left as any).compareTo(right);
+        };
+
+        this._arr.sort(comparison);
+
+        return;
+      }
+    }
+
+    //Finally, Plan C. use the default comparer which may not work for complex types.
+    //The behavior in C# is to throw an exception if at least one type doesn't implement `IComparable<T>`
+    this._arr.sort(defaultComparer);
   }
 
   //Can be used to access the indexer too, which is not sexy

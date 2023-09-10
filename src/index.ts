@@ -66,16 +66,14 @@ const assertAreEqual = (
 
 //lst.add(undefined);
 
-const lst = toList([1, 1, 1]);
-const arr = toArray([1, 1, 1]);
+const actual = toList([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+const expected = getArray(10);
 
-lst.forEach((x) => {
-  x.someNumber++;
-});
+actual.sort();
 
-console.log("Lst", lst);
-console.log("Arr", arr);
-console.log("assertion", assertAreEqual(lst, arr));
+console.log("Lst", actual);
+console.log("Arr", expected);
+console.log("assertion", assertAreEqual(actual, expected));
 
 // F5 attaches debugger (slow) - compiles and runs, but it's VERY slow
 // Ctrl + F5 runs without attaching the debugger (faster) - it will not recompile anything first!

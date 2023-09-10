@@ -1,4 +1,4 @@
-import List from "../dist/List.js";
+import List from "../dist/System/Collections/Generic/List.js";
 
 const getArray = (size: number): Array<number> => {
   //Initializing the array size

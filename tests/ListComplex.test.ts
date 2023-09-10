@@ -1,5 +1,6 @@
-import List from "../dist/List.js";
-import ComparableObject from "../dist/ComparableObject.js";
+import List from "../dist/System/Collections/Generic/List.js";
+import ComparableObject from "../dist/Entities/ComparableObject.js";
+import { defaultComparer } from "../dist/utils.js";
 
 //Convenience function to reduce syntax length
 const n = (someNumber: number): ComparableObject => {
@@ -8,7 +9,7 @@ const n = (someNumber: number): ComparableObject => {
 
 const getArray = (size: number): Array<ComparableObject> => {
   //Initializing the array size
-  const arr = new Array<ComparableObject>(size);
+  const arr = new Array<ComparableObject>();
 
   for (let i = 0; i < size; i++) {
     //Do not use push, must assign directly by index
@@ -189,18 +190,22 @@ test("Given non-empty list in descending order, When sorting the list using defa
   const actual = toList([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
   const expected = getArray(10);
 
-  actual.sort();
+  actual.sort(defaultComparer);
 
   expect(assertAreEqual(actual, expected)).toBe(false);
 });
 
-test("Given non-empty list in descending order, When sorting the list using IComparable<T>, Then the list cannot be sorted", () => {
+test("Given non-empty list in descending order, When sorting the list using IComparable<T>, Then the list is sorted in ascending order", () => {
   const actual = toList([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
   const expected = getArray(10);
 
   actual.sort();
 
-  expect(assertAreEqual(actual, expected)).toBe(false);
+  console.log("Lst", actual);
+  console.log("Arr", expected);
+  console.log("assertion", assertAreEqual(actual, expected));
+
+  expect(assertAreEqual(actual, expected)).toBe(true);
 });
 
 test("Given non-empty list of unordered items, When sorting the list using IComparable<T>, Then the list is sorted in ascending order", () => {
@@ -208,6 +213,10 @@ test("Given non-empty list of unordered items, When sorting the list using IComp
   const expected = getArray(10);
 
   actual.sort();
+
+  console.log("Lst", actual);
+  console.log("Arr", expected);
+  console.log("assertion", assertAreEqual(actual, expected));
 
   expect(assertAreEqual(actual, expected)).toBe(true);
 });

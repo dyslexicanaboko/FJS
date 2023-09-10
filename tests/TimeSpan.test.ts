@@ -1,7 +1,7 @@
 //https://medium.com/nerd-for-tech/testing-typescript-with-jest-290eaee9479d
 //const DateTime = require("../dist/DateTime");
-import TimeSpan from "../dist/TimeSpan.js";
-import DateTime from "../dist/DateTime.js";
+import TimeSpan from "../dist/System/TimeSpan.js";
+import DateTime from "../dist/System/DateTime.js";
 
 const assertComponents = (
   ts: TimeSpan,
