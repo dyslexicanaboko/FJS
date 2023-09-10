@@ -1,3 +1,6 @@
+import ElementType from "../../ElementType.js";
+import { defaultComparer } from "../../../utils.js";
+
 //https://learn.microsoft.com/en-us/dotnet/api/system.array
 //https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
@@ -14,22 +17,68 @@ export default class List<T> {
       //In this case - overwrite everything starting at index 0
       this._nextIndex = 0;
     } else {
-      this._nextIndex = this.count();
+      this._nextIndex = this.count;
     }
+  }
+
+  /* There isn't an available way to check if the type T being passed into this class:
+   *   1. implements an interface
+   *   2. extends another class
+   *   3. is a primitive type
+   *
+   * There isn't a way to instantiate a type of T either. Doesn't matter if there is a
+   * default constructor.
+   *
+   * There is no way to check if type T may or may not have a function with a particular name.
+   * Therefore, I am using the old hacky JavaScript way of testing incoming objects as though
+   * they are anonymous to gain lee way. I hope TypeScript improves this in the future. */
+  private static hasEqualsFunction(item: any): boolean {
+    return typeof item.equals === "function";
+  }
+
+  private static hasCompareToFunction(item: any): boolean {
+    return typeof item.compareTo === "function";
+  }
+
+  //I am going to use an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
+  //TODO: I ran into a problem where the array did not have a zero index. I think raising an error
+  //is the best option at the moment.
+  private linearSearch(item: any): ElementType<T> {
+    for (let i = 0; i < this.count; i++) {
+      const found = this._arr[i];
+
+      if (item.equals(found)) return { index: i, value: found };
+    }
+
+    return { index: -1, value: undefined };
   }
 
   private allUndefined(element: T): boolean {
     return element === undefined;
   }
 
-  //This comes from `System.Linq`, but it is so useful I am including it. I might move it to an extension library later.
+  //Keeping this for now because I might need it later
+  // private isNull(item: any): void {
+  //   if (item === null || item === undefined) {
+  //     throw new Error("Object cannot be null or undefined.");
+  //   }
+  // }
+
+  //This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function in JavaScript
+  //So for now, unless I change my mind, these are staying inside the class.
   any(): boolean {
-    return this.count() > 0;
+    return this.count > 0;
   }
 
-  count(): number {
+  get count(): number {
     return this._arr.length;
   }
+
+  //I considered implementing this method to mimic the Capacity property, but there isn't really an
+  //equivalent in JavaScript without going through a lot of trouble for the sake of it and no gain.
+  // capacity(): number {
+  //   return this._arr.length;
+  // }
 
   /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
    * There is another JavaScript crackhead problem I have rediscovered, but I am not sure how to deal with yet.
@@ -39,13 +88,14 @@ export default class List<T> {
    * Then the 3 items you intended to add to the array increases the size to 6.
    *
    * JavaScript does not have a true add function, therefore you must overwrite items by index.
-   * There is a lot of banter about setting the capacity of an array:
+   * Here is a lot of banter about setting the capacity of an array:
    * https://stackoverflow.com/questions/4852017/how-to-initialize-an-arrays-length-in-javascript */
   add(item: T): void {
     //Through the power of crackhead magic, this syntax functions as two things:
     //1. Store the supplied item at this index (overwrite).
     //2. Add a new element to the end of the array and increase the array's size by one
     //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a queue.
+    //If this was done on a C# List<T>, even if there is Capacity, an `ArgumentOutOfRangeException` would be thrown.
     this._arr[this._nextIndex] = item;
 
     this._nextIndex++;
@@ -58,7 +108,7 @@ export default class List<T> {
   }
 
   clear(): void {
-    const count = this.count();
+    const count = this.count;
 
     //Pop everything off into the ether
     for (let i = 0; i < count; i++) {
@@ -69,11 +119,32 @@ export default class List<T> {
   }
 
   contains(item: T): boolean {
+    if (List.hasEqualsFunction(item)) {
+      return this.linearSearch(item).value !== undefined;
+    }
+
     return this._arr.includes(item);
   }
 
   copyTo(array: Array<T>): void {
     array.push(...this._arr);
+  }
+
+  //This comes from `System.Linq`, but it is so useful I am including it. Same as `any()` above.
+  //Conscious decision to return another List<T> instead of IEnumerable<T> because that's a whole other can of worms.
+  //I could return an Array, but I don't see the point if it's going to be turned right back into a List potentially.
+  //There is the `toArray()` function if anything.
+  distinct(): List<T> {
+    const lst = new List<T>();
+
+    //O(n^2) bubble search, not the most efficient way to do this, but okay for now
+    this.forEach((item) => {
+      if (!lst.contains(item)) {
+        lst.add(item);
+      }
+    });
+
+    return lst;
   }
 
   exists(predicate: (item: T) => boolean): boolean {
@@ -128,6 +199,10 @@ export default class List<T> {
   }
 
   indexOf(item: T): number {
+    if (List.hasEqualsFunction(item)) {
+      return this.linearSearch(item).index;
+    }
+
     return this._arr.indexOf(item);
   }
 
@@ -136,7 +211,7 @@ export default class List<T> {
       throw new Error("Index must be greater than or equal to zero.");
     }
 
-    if (index > this.count()) {
+    if (index > this.count) {
       throw new Error("Index must be within the bounds of the List.");
     }
   }
@@ -157,7 +232,7 @@ export default class List<T> {
 
     this._arr.splice(index, 0, ...items);
 
-    this._nextIndex = this.count();
+    this._nextIndex = this.count;
   }
 
   remove(item: T): boolean {
@@ -206,41 +281,43 @@ export default class List<T> {
 
     this._arr.splice(index, count);
 
-    this._nextIndex = this.count();
+    this._nextIndex = this.count;
   }
 
   reverse(): void {
     this._arr.reverse();
   }
 
-  //Is left -1 <, 1 >, 0 = then right
-  private defaultComparer(left: T, right: T): number {
-    //If both are undefined then left = right
-    if (!left && !right) return 0;
-
-    //If left is undefined then left < right
-    if (!left) return -1;
-
-    //If right is undefined then left > right
-    if (!right) return 1;
-
-    //If neither is undefined, then do a proper compare
-    if (left < right) return -1;
-
-    if (left === right) return 0;
-
-    //if(left > right)
-    return 1;
-  }
-
   sort(comparison?: (left: T, right: T) => number): void {
-    let comparer;
+    if (!this.any()) return;
 
-    if (!comparison) {
-      comparer = this.defaultComparer;
+    //Plan A. If the user provided a comparison function then use it
+    if (comparison) {
+      this._arr.sort(comparison);
+
+      return;
     }
 
-    this._arr.sort(comparer);
+    //Otherwise, Plan B. attempt to use `IComparable<T>` from item of type T
+    //Pull any surrogate item to test with, hopefully it's not undefined (WIP)
+    let item = this.get(0);
+
+    if (item) {
+      //Check if the item has a compareTo function
+      if (List.hasCompareToFunction(item)) {
+        comparison = (left: T, right: T) => {
+          return (left as any).compareTo(right);
+        };
+
+        this._arr.sort(comparison);
+
+        return;
+      }
+    }
+
+    //Finally, Plan C. use the default comparer which may not work for complex types.
+    //The behavior in C# is to throw an exception if at least one type doesn't implement `IComparable<T>`
+    this._arr.sort(defaultComparer);
   }
 
   //Can be used to access the indexer too, which is not sexy
@@ -248,14 +325,27 @@ export default class List<T> {
     return this._arr;
   }
 
-  /* I cannot implement this function considering JS can't do it. There isn't really a way to track excess capacity in JS.
-   * Managed arrays (List<T>) in C# have a concept of capacity and count. Capacity is the total size of the array, count is the
-   * number of elements in the array. The closest we can get to the concept of excess capacity in a JS array is having undefined
-   * elements. The problem is it is that it is not possible to tell the difference between elements that are intentionally
-   * undefined and an element that is undefined because it was never initialized as such.
+  /* I was on the fence about implementing this function considering JS can't really do it. There isn't really a way to track
+   * excess capacity in JS. Managed arrays (List<T>) in C# have a concept of capacity and count. Capacity is the total size of
+   * the array, count is the number of elements in the array. The closest we can get to the concept of excess capacity in a
+   * JS array is having undefined elements. The problem is it is that it is not possible to tell the difference between elements
+   * that are intentionally undefined and an element that is undefined because it was never initialized as such.
    *
-   * The only rational thing I can think of is to purge all undefined elements when working with primitives only. This is not
-   * going to be acceptable for complex types since they can legitamately be undefined. */
+   * The only rational thing I can think of is to purge all undefined elements when working with primitives only.
+   * My original hang up was that this is not going to be acceptable for complex types since they can legitamately be undefined.
+   * But then I started thinking about how C# 8 handles things and realized I can make the same excuses it makes. TypeScript
+   * already does this where it doesn't allow for undefined unless explicitly allowed. This is the same idea as nullable
+   * reference types. Like a nullable string. */
   //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.trimexcess
-  //trimExcess
+  trimExcess(): void {
+    //If the array is empty, then there is no excess capacity to trim
+    if (!this.any()) return;
+
+    //If the array is full, then there is no excess capacity to trim
+    if (this.count === this._arr.length) return;
+
+    //Find all undefined elements and remove them. The only way undefined elements can get into the List is if
+    //the initial array provided has its size set.
+    this.removeAll(this.allUndefined);
+  }
 }

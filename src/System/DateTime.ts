@@ -1,6 +1,6 @@
 import TimeSpan from "./TimeSpan.js";
-import { FirstDayOfTheMonth, GreatestCommonDayOfMonth } from "./constants.js";
-import { formatTimeStamp } from "./string-formats.js";
+import { FirstDayOfTheMonth, GreatestCommonDayOfMonth } from "../constants.js";
+import { formatTimeStamp } from "../string-formats.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
@@ -15,11 +15,11 @@ export default class DateTime {
     return new DateTime(new Date(dateTimeString));
   }
 
-  static now(): DateTime {
+  static get now(): DateTime {
     return new DateTime(new Date()); //Local TimeZone by default
   }
 
-  static utcNow(): DateTime {
+  static get utcNow(): DateTime {
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC
     //new Date(Date.UTC(1970, 0)) // This will instantiate a TZ localized version which is trash
     //Additionally, that constructor is useless because it requires two arguments instead of just
@@ -42,10 +42,10 @@ export default class DateTime {
     return new DateTime(utcNow);
   }
 
-  static today(): DateTime {
-    const now = this.now();
+  static get today(): DateTime {
+    const now = this.now;
 
-    return now.date();
+    return now.date;
   }
 
   //https://stackoverflow.com/a/16353241/603807
@@ -62,7 +62,7 @@ export default class DateTime {
     return new Date(this._dateTime);
   }
 
-  date(): DateTime {
+  get date(): DateTime {
     const copy = this.cloneRef();
 
     copy.setHours(0);
@@ -73,7 +73,7 @@ export default class DateTime {
     return new DateTime(copy);
   }
 
-  year(): number {
+  get year(): number {
     return this._dateTime.getFullYear();
   }
 
@@ -156,27 +156,27 @@ export default class DateTime {
     date.setMonth(crackHeadMonthIndex, day);
   }
 
-  month(): number {
+  get month(): number {
     return this.getMonthIndex() + 1;
   }
 
-  day(): number {
+  get day(): number {
     return this._dateTime.getDate();
   }
 
-  hour(): number {
+  get hour(): number {
     return this._dateTime.getHours();
   }
 
-  minute(): number {
+  get minute(): number {
     return this._dateTime.getMinutes();
   }
 
-  second(): number {
+  get second(): number {
     return this._dateTime.getSeconds();
   }
 
-  millisecond(): number {
+  get millisecond(): number {
     return this._dateTime.getMilliseconds();
   }
 
@@ -203,44 +203,44 @@ export default class DateTime {
 
   addDays(days: number): DateTime {
     return this.add(days, (unit, copy) => {
-      copy.setDate(this.day() + unit);
+      copy.setDate(this.day + unit);
     });
   }
 
   addMonths(months: number): DateTime {
     return this.add(months, (unit, copy) => {
       //Using dedicated function for handling JavaScript crackhead month math
-      DateTime.setMonth(copy, this.month() + unit);
+      DateTime.setMonth(copy, this.month + unit);
     });
   }
 
   addYears(years: number): DateTime {
     return this.add(years, (unit, copy) => {
-      copy.setFullYear(this.year() + unit);
+      copy.setFullYear(this.year + unit);
     });
   }
 
   addHours(hours: number): DateTime {
     return this.add(hours, (unit, copy) => {
-      copy.setHours(this.hour() + unit);
+      copy.setHours(this.hour + unit);
     });
   }
 
   addMinutes(minutes: number): DateTime {
     return this.add(minutes, (unit, copy) => {
-      copy.setMinutes(this.minute() + unit);
+      copy.setMinutes(this.minute + unit);
     });
   }
 
   addSeconds(seconds: number): DateTime {
     return this.add(seconds, (unit, copy) => {
-      copy.setSeconds(this.second() + unit);
+      copy.setSeconds(this.second + unit);
     });
   }
 
   addMilliseconds(milliseconds: number): DateTime {
     return this.add(milliseconds, (unit, copy) => {
-      copy.setMilliseconds(this.millisecond() + unit);
+      copy.setMilliseconds(this.millisecond + unit);
     });
   }
 
@@ -251,13 +251,13 @@ export default class DateTime {
   }
 
   log(): void {
-    console.log("year", this.year());
-    console.log("month", this.month());
-    console.log("day", this.day());
-    console.log("hour", this.hour());
-    console.log("minute", this.minute());
-    console.log("second", this.second());
-    console.log("millisecond", this.millisecond());
+    console.log("year", this.year);
+    console.log("month", this.month);
+    console.log("day", this.day);
+    console.log("hour", this.hour);
+    console.log("minute", this.minute);
+    console.log("second", this.second);
+    console.log("millisecond", this.millisecond);
   }
 
   //The default Date.toString() output is trash - I don't know ANYONE who thinks this is helpful
@@ -267,22 +267,22 @@ export default class DateTime {
     //C#'s DateTime.ToString() format depends on the user's OS's preferences. I am going to provide bias here for argument's sake.
     //M/d/yyy HH:mm:ss -> Ex: 9/1/2023 22:53:50
 
-    return `${this.month()}/${this.day()}/${this.year()} ${formatTimeStamp(
-      this.hour(),
-      this.minute(),
-      this.second()
+    return `${this.month}/${this.day}/${this.year} ${formatTimeStamp(
+      this.hour,
+      this.minute,
+      this.second
     )}`;
   }
 
   equals(other: DateTime): boolean {
     return (
-      this.year() === other.year() &&
-      this.month() === other.month() &&
-      this.day() === other.day() &&
-      this.hour() === other.hour() &&
-      this.minute() === other.minute() &&
-      this.second() === other.second() &&
-      this.millisecond() === other.millisecond()
+      this.year === other.year &&
+      this.month === other.month &&
+      this.day === other.day &&
+      this.hour === other.hour &&
+      this.minute === other.minute &&
+      this.second === other.second &&
+      this.millisecond === other.millisecond
     );
   }
 }

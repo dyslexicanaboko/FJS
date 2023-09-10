@@ -1,7 +1,7 @@
 //https://medium.com/nerd-for-tech/testing-typescript-with-jest-290eaee9479d
 //const DateTime = require("../dist/DateTime");
-import TimeSpan from "../dist/TimeSpan.js";
-import DateTime from "../dist/DateTime.js";
+import TimeSpan from "../dist/System/TimeSpan.js";
+import DateTime from "../dist/System/DateTime.js";
 
 const assertComponents = (
   ts: TimeSpan,
@@ -11,11 +11,11 @@ const assertComponents = (
   seconds: number = 0,
   milliseconds: number = 0
 ) => {
-  expect(ts.days()).toBe(days);
-  expect(ts.hours()).toBe(hours);
-  expect(ts.minutes()).toBe(minutes);
-  expect(ts.seconds()).toBe(seconds);
-  expect(ts.milliseconds()).toBe(milliseconds);
+  expect(ts.days).toBe(days);
+  expect(ts.hours).toBe(hours);
+  expect(ts.minutes).toBe(minutes);
+  expect(ts.seconds).toBe(seconds);
+  expect(ts.milliseconds).toBe(milliseconds);
 };
 
 const getTimeSpan = (start: string, end: string): TimeSpan => {
@@ -43,7 +43,7 @@ const getTimeSpan = (start: string, end: string): TimeSpan => {
  *  59.999977300001774 seconds
  *  977.3000031709671  milliseconds */
 test("Given today and yesterday, When subtracted, Then a difference of one day is returned", () => {
-  const today = DateTime.now();
+  const today = DateTime.now;
   const yesterday = today.addDays(-1);
   const ts = today.subtract(yesterday);
 
@@ -66,5 +66,5 @@ test("Given dates 100 seconds apart, When subtracted, Then a difference of 1 min
   const ts = getTimeSpan("2023-08-09 00:00:00.000", "2023-08-09 00:01:40.000");
 
   assertComponents(ts, 0, 0, 1, 40);
-  expect(ts.totalSeconds()).toBe(100);
+  expect(ts.totalSeconds).toBe(100);
 });

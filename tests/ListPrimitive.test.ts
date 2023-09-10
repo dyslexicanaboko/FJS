@@ -1,4 +1,4 @@
-import List from "../dist/List.js";
+import List from "../dist/System/Collections/Generic/List.js";
 
 const getArray = (size: number): Array<number> => {
   //Initializing the array size
@@ -19,7 +19,7 @@ const assertAreEqual = (
   actual: List<number>,
   expected: Array<number>
 ): boolean => {
-  for (let i = 0; i < actual.count(); i++) {
+  for (let i = 0; i < actual.count; i++) {
     if (actual.get(i) !== expected[i]) return false;
   }
 
@@ -31,7 +31,7 @@ const _empty = getList();
 const _someNumber: number = 5829467163;
 
 test("Given list with ten elements, When getting count, Then ten is returned", () => {
-  expect(_ten.count()).toBe(10);
+  expect(_ten.count).toBe(10);
 });
 
 test("Given non-empty list, When any, Then true is returned", () => {
@@ -47,7 +47,7 @@ test("Given empty list, When adding one element, Then one element exists", () =>
 
   lst.add(_someNumber);
 
-  expect(lst.count()).toBe(1);
+  expect(lst.count).toBe(1);
   expect(lst.get(0)).toBe(_someNumber);
 });
 
@@ -58,7 +58,7 @@ test("Given empty list, When adding range of elements, Then list size is equal t
 
   lst.addRange(arr);
 
-  expect(lst.count()).toBe(size);
+  expect(lst.count).toBe(size);
 });
 
 test("Given non-empty list, When adding range of elements, Then list size is equal to original plus range counts", () => {
@@ -67,7 +67,7 @@ test("Given non-empty list, When adding range of elements, Then list size is equ
 
   lst.addRange(arr);
 
-  expect(lst.count()).toBe(15);
+  expect(lst.count).toBe(15);
 });
 
 test("Given non-empty list, When clearing the list, Then list size is zero", () => {
@@ -75,7 +75,7 @@ test("Given non-empty list, When clearing the list, Then list size is zero", () 
 
   lst.clear();
 
-  expect(lst.count()).toBe(0);
+  expect(lst.count).toBe(0);
 });
 
 test("Given non-empty list, When checking for an item the list does contain, Then true is returned", () => {
@@ -91,7 +91,7 @@ test("Given non-empty list, When copying to a new empty array, Then array and li
 
   _ten.copyTo(arr);
 
-  expect(_ten.count()).toBe(10);
+  expect(_ten.count).toBe(10);
   expect(arr.length).toBe(10);
   expect(assertAreEqual(_ten, arr)).toBe(true);
 });
@@ -115,7 +115,7 @@ test("Given non-empty list, When finding item the list does not contains, Then u
 test("Given non-empty list, When finding all items the list does contain, Then all items are returned", () => {
   const actual = _ten.findAll((x) => x <= 5);
 
-  expect(actual.count()).toBe(5);
+  expect(actual.count).toBe(5);
 
   const expected = getArray(5);
 
@@ -177,7 +177,7 @@ test("Given non-empty list, When inserting item by inbound index, Then list incr
 
   actual.insert(1, 2);
 
-  expect(actual.count()).toBe(expected.length);
+  expect(actual.count).toBe(expected.length);
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
 
@@ -204,7 +204,7 @@ test("Given non-empty list, When inserting a range of items by inbound index, Th
 
   actual.insertRange(1, [2, 3, 4, 5]);
 
-  expect(actual.count()).toBe(expected.length);
+  expect(actual.count).toBe(expected.length);
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
 
@@ -240,14 +240,14 @@ test("Given non-empty list, When removing the items by search criteria the list 
   const lst = getList(10);
 
   expect(lst.removeAll((x) => x > 5)).toBe(5);
-  expect(lst.count()).toBe(5);
+  expect(lst.count).toBe(5);
 });
 
 test("Given non-empty list, When removing the items by search criteria the list does not contains, Then the number of items removed is zero", () => {
   const lst = getList(10);
 
   expect(lst.removeAll((x) => x > 15)).toBe(0);
-  expect(lst.count()).toBe(10);
+  expect(lst.count).toBe(10);
 });
 
 test("Given empty list, When removing the items by search criteria, Then zero is returned", () => {
@@ -262,7 +262,7 @@ test("Given non-empty list, When removing item by inbound index, Then list decre
 
   actual.removeAt(1);
 
-  expect(actual.count()).toBe(expected.length);
+  expect(actual.count).toBe(expected.length);
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
 
@@ -289,7 +289,7 @@ test("Given non-empty list, When removing a range of items by inbound index, The
 
   actual.removeRange(3, 3);
 
-  expect(actual.count()).toBe(expected.length);
+  expect(actual.count).toBe(expected.length);
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
 

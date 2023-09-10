@@ -4,8 +4,8 @@ import {
   SecondsInOneMinute,
   MillisecondsInOneSecond,
   HoursInOneDay,
-} from "./constants.js";
-import { formatTimeSpan } from "./string-formats.js";
+} from "../constants.js";
+import { formatTimeSpan } from "../string-formats.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.timespan?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
@@ -59,43 +59,43 @@ export default class TimeSpan {
     return Math.floor(target);
   }
 
-  totalMilliseconds(): number {
+  get totalMilliseconds(): number {
     return this._totalMilliseconds;
   }
 
-  totalSeconds(): number {
+  get totalSeconds(): number {
     return this._totalSeconds;
   }
 
-  totalMinutes(): number {
+  get totalMinutes(): number {
     return this._totalMinutes;
   }
 
-  totalHours(): number {
+  get totalHours(): number {
     return this._totalHours;
   }
 
-  totalDays(): number {
+  get totalDays(): number {
     return this._totalDays;
   }
 
-  milliseconds(): number {
+  get milliseconds(): number {
     return this._milliseconds;
   }
 
-  seconds(): number {
+  get seconds(): number {
     return this._seconds;
   }
 
-  minutes(): number {
+  get minutes(): number {
     return this._minutes;
   }
 
-  hours(): number {
+  get hours(): number {
     return this._hours;
   }
 
-  days(): number {
+  get days(): number {
     return this._days;
   }
 
