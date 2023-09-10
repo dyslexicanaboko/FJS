@@ -17,3 +17,29 @@ export const defaultComparer = <T>(left: T, right: T): number => {
   //if(left > right)
   return 1;
 };
+
+/* There isn't an available way to check if the type T being passed into this class:
+ *   1. implements an interface
+ *   2. extends another class
+ *   3. is a primitive type
+ *
+ * There isn't a way to instantiate a type of T either. Doesn't matter if there is a
+ * default constructor.
+ *
+ * There is no way to check if type T may or may not have a function with a particular name.
+ * Therefore, I am using the old hacky JavaScript way of testing incoming objects as though
+ * they are anonymous to gain lee way. I hope TypeScript improves this in the future. */
+//Native to System.Object as Equals(object other), but also as IEquatable<T> as Equals(T other)
+export const hasEqualsFunction = (item: any): boolean => {
+  return typeof item.equals === "function";
+};
+
+//IComparable<T>
+export const hasCompareToFunction = (item: any): boolean => {
+  return typeof item.compareTo === "function";
+};
+
+//Native to System.Object as GetHashCode()
+export const hasGetHashCodeFunction = (item: any): boolean => {
+  return typeof item.getHashCode === "function";
+};

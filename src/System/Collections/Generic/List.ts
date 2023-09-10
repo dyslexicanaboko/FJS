@@ -1,5 +1,9 @@
-import ElementType from "../../ElementType.js";
-import { defaultComparer } from "../../../utils.js";
+import ElementType from "../ElementType.js";
+import {
+  defaultComparer,
+  hasCompareToFunction,
+  hasEqualsFunction,
+} from "../../../utils.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.array
 //https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
@@ -19,25 +23,6 @@ export default class List<T> {
     } else {
       this._nextIndex = this.count;
     }
-  }
-
-  /* There isn't an available way to check if the type T being passed into this class:
-   *   1. implements an interface
-   *   2. extends another class
-   *   3. is a primitive type
-   *
-   * There isn't a way to instantiate a type of T either. Doesn't matter if there is a
-   * default constructor.
-   *
-   * There is no way to check if type T may or may not have a function with a particular name.
-   * Therefore, I am using the old hacky JavaScript way of testing incoming objects as though
-   * they are anonymous to gain lee way. I hope TypeScript improves this in the future. */
-  private static hasEqualsFunction(item: any): boolean {
-    return typeof item.equals === "function";
-  }
-
-  private static hasCompareToFunction(item: any): boolean {
-    return typeof item.compareTo === "function";
   }
 
   //I am going to use an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
@@ -119,7 +104,7 @@ export default class List<T> {
   }
 
   contains(item: T): boolean {
-    if (List.hasEqualsFunction(item)) {
+    if (hasEqualsFunction(item)) {
       return this.linearSearch(item).value !== undefined;
     }
 
@@ -199,7 +184,7 @@ export default class List<T> {
   }
 
   indexOf(item: T): number {
-    if (List.hasEqualsFunction(item)) {
+    if (hasEqualsFunction(item)) {
       return this.linearSearch(item).index;
     }
 
@@ -304,7 +289,7 @@ export default class List<T> {
 
     if (item) {
       //Check if the item has a compareTo function
-      if (List.hasCompareToFunction(item)) {
+      if (hasCompareToFunction(item)) {
         comparison = (left: T, right: T) => {
           return (left as any).compareTo(right);
         };
