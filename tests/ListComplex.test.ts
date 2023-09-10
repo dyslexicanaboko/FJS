@@ -201,10 +201,6 @@ test("Given non-empty list in descending order, When sorting the list using ICom
 
   actual.sort();
 
-  console.log("Lst", actual);
-  console.log("Arr", expected);
-  console.log("assertion", assertAreEqual(actual, expected));
-
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
 
@@ -214,9 +210,12 @@ test("Given non-empty list of unordered items, When sorting the list using IComp
 
   actual.sort();
 
-  console.log("Lst", actual);
-  console.log("Arr", expected);
-  console.log("assertion", assertAreEqual(actual, expected));
-
   expect(assertAreEqual(actual, expected)).toBe(true);
+});
+
+test("Given non-empty list of duplicated items that are all seven, When getting a distinct list using IEquatable<T>, Then the list returns one item seven", () => {
+  const actual = toList([7, 7, 7, 7, 7, 7, 7, 7, 7, 7]).distinct();
+
+  expect(actual.count).toBe(1);
+  expect(actual.get(0).someNumber).toBe(7);
 });

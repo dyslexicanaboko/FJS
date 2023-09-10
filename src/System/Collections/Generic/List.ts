@@ -64,7 +64,8 @@ export default class List<T> {
   //   }
   // }
 
-  //This comes from `System.Linq`, but it is so useful I am including it. I might move it to an extension library later.
+  //This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function in JavaScript
+  //So for now, unless I change my mind, these are staying inside the class.
   any(): boolean {
     return this.count > 0;
   }
@@ -87,13 +88,14 @@ export default class List<T> {
    * Then the 3 items you intended to add to the array increases the size to 6.
    *
    * JavaScript does not have a true add function, therefore you must overwrite items by index.
-   * There is a lot of banter about setting the capacity of an array:
+   * Here is a lot of banter about setting the capacity of an array:
    * https://stackoverflow.com/questions/4852017/how-to-initialize-an-arrays-length-in-javascript */
   add(item: T): void {
     //Through the power of crackhead magic, this syntax functions as two things:
     //1. Store the supplied item at this index (overwrite).
     //2. Add a new element to the end of the array and increase the array's size by one
     //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a queue.
+    //If this was done on a C# List<T>, even if there is Capacity, an `ArgumentOutOfRangeException` would be thrown.
     this._arr[this._nextIndex] = item;
 
     this._nextIndex++;
@@ -126,6 +128,23 @@ export default class List<T> {
 
   copyTo(array: Array<T>): void {
     array.push(...this._arr);
+  }
+
+  //This comes from `System.Linq`, but it is so useful I am including it. Same as `any()` above.
+  //Conscious decision to return another List<T> instead of IEnumerable<T> because that's a whole other can of worms.
+  //I could return an Array, but I don't see the point if it's going to be turned right back into a List potentially.
+  //There is the `toArray()` function if anything.
+  distinct(): List<T> {
+    const lst = new List<T>();
+
+    //O(n^2) bubble search, not the most efficient way to do this, but okay for now
+    this.forEach((item) => {
+      if (!lst.contains(item)) {
+        lst.add(item);
+      }
+    });
+
+    return lst;
   }
 
   exists(predicate: (item: T) => boolean): boolean {

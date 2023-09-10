@@ -46,7 +46,7 @@ export default class ComparableObject
   //This is technically inherited from System.Object automatically, but since JavaScript
   //does not have a notion of hashing, then I am using an interface to enforce it.
   getHashCode(): number {
-    return -7;
+    return -7; //This will be implemented when I work on the Dictionary class
   }
 
   compareTo(other: ComparableObject): number {
