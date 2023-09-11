@@ -43,3 +43,12 @@ export const hasCompareToFunction = (item: any): boolean => {
 export const hasGetHashCodeFunction = (item: any): boolean => {
   return typeof item.getHashCode === "function";
 };
+
+export const defaultGetHashCode = (key: any): number => {
+  //TODO: Primitives will have a default hashing algorithm, but complex types won't
+  if (typeof key === "number") return key;
+
+  //This is crappy, but it's the best you can have if you don't implement the getHashCode function
+  //It will be as crappy in C# when you don't implement the GetHashCode function
+  return Math.round(Math.random() * 100000000000);
+};

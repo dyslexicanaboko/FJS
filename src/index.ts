@@ -71,9 +71,20 @@ const expected = getArray(10);
 
 actual.sort();
 
-console.log("Lst", actual);
-console.log("Arr", expected);
-console.log("assertion", assertAreEqual(actual, expected));
+// console.log("Lst", actual);
+// console.log("Arr", expected);
+// console.log("assertion", assertAreEqual(actual, expected));
+
+//This will not allow duplicates if it knows how to do comparisons
+//const map = new Map<number, string>();
+// map.set(1, "one");
+// map.set(1, "one");
+
+const map = new Map<ComparableObject, string>();
+map.set(n(1), "one");
+map.set(n(1), "one");
+
+console.log("Map", map);
 
 // F5 attaches debugger (slow) - compiles and runs, but it's VERY slow
 // Ctrl + F5 runs without attaching the debugger (faster) - it will not recompile anything first!

@@ -1,4 +1,4 @@
-import ElementType from "../ElementType.js";
+import { ElementType } from "../ElementType.js";
 import {
   defaultComparer,
   hasCompareToFunction,
