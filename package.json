@@ -14,6 +14,8 @@
     "test-ts": "tsc -d && jest --runTestsByPath tests/TimeSpan.test.ts",
     "test-lstP": "tsc -d && jest --runTestsByPath tests/ListPrimitive.test.ts",
     "test-lstC": "tsc -d && jest --runTestsByPath tests/ListComplex.test.ts",
+    "test-dictP": "tsc -d && jest --runTestsByPath tests/DictPrimitive.test.ts",
+    "test-dictC": "tsc -d && jest --runTestsByPath tests/DictComplex.test.ts",
     "test0-comment": "Run specific test suites: https://jestjs.io/docs/cli#--runtestsbypath"
   },
   "author": "Eli Hayon",

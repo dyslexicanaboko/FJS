@@ -25,6 +25,7 @@ export default class Dictionary<TKey, TValue> {
     right: TValue | undefined
   ) => boolean;
 
+  public constructor();
   public constructor(map: Map<TKey, TValue>);
   public constructor(map: undefined, compare: IEqualityComparer<TKey>);
   public constructor(
@@ -33,14 +34,9 @@ export default class Dictionary<TKey, TValue> {
   ) {
     this._map = new Map<number, KeyValuePair<TKey, TValue>>();
 
-    if (map) {
-      for (const [key, value] of map) {
-        //If the provided map is malformed, meaning that it has duplicated keys, then an error will be thrown this cannot be helped
-        this.add(key, value);
-      }
-    }
-
-    this._equals = defaultEquals;
+    this._equals = (left: TValue | undefined, right: TValue | undefined) => {
+      return defaultEquals(left, right);
+    };
 
     this._comparer = compare;
 
@@ -48,16 +44,24 @@ export default class Dictionary<TKey, TValue> {
     if (compare) {
       this._comparerMode = ComparerMode.External;
 
-      this._getHashCode = compare.getHashCode;
+      this._getHashCode = (key: TKey) => {
+        return compare.getHashCode(key);
+      };
+    } else {
+      this._comparerMode = ComparerMode.Default;
 
-      return;
+      this._getHashCode = (key: TKey) => {
+        return defaultGetHashCode(key);
+      };
     }
 
-    this._comparerMode = ComparerMode.Default;
-
-    this._getHashCode = (key: TKey) => {
-      return defaultGetHashCode(key);
-    };
+    //This has to happen last because it depends on the comparer being set first
+    if (map) {
+      for (const [key, value] of map) {
+        //If the provided map is malformed, meaning that it has duplicated keys, then an error will be thrown this cannot be helped
+        this.add(key, value);
+      }
+    }
   }
 
   any(): boolean {
@@ -115,7 +119,9 @@ export default class Dictionary<TKey, TValue> {
 
     this._comparerMode = ComparerMode.Internal;
 
-    this._getHashCode = (key as any).getHashCode;
+    this._getHashCode = (key: TKey) => {
+      return (key as any).getHashCode();
+    };
   }
 
   //Since it's impossible to know which function will be called first, a test to see which comparer can
@@ -190,6 +196,41 @@ export default class Dictionary<TKey, TValue> {
     }
 
     return false;
+  }
+
+  forEach(
+    action: (keyValuePair: KeyValuePair<TKey, TValue | undefined>) => void
+  ): void {
+    /* C# won't let you change the iterator variable while you are looping via foreach:
+     *   When the key is a primitive then the code won't even compile if you attempt do this.
+     *   When you are using a custom class, then you can modify its properties.
+     * I cannot prevent the user from modifying the key in either case, therefore the only thing I can do is raise
+     * an error if they change the key's value which in turn is modifying the hashcode.
+     * Therefore, a check for collisions must be made. */
+    for (const kvp of this._map.values()) {
+      const before = this.hashKey(kvp.key);
+
+      action(kvp);
+
+      const after = this.hashKey(kvp.key);
+
+      //If the key has not changed then everything is fine
+      if (before === after) continue;
+
+      //If the key changed, then check to see if the new key already exists.
+      const newEntry = this._map.get(after);
+
+      //If the key already exists, this is a confirmed collision.
+      if (newEntry) {
+        throw new Error(
+          `An item with the same key has already been added. Key: ${kvp.key}`
+        );
+      }
+
+      //If the key does not exist, then this is a confirmed exchange
+      this._map.delete(before); //Delete the old key
+      this._map.set(after, kvp); //Add the new key
+    }
   }
 
   get(key: TKey): TValue | undefined {

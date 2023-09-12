@@ -1,8 +1,8 @@
 //https://nodejs.dev/en/learn/nodejs-with-typescript/
 //import { DateTime } from "./DateTime.js";
 import DateTime from "./System/DateTime.js";
-import List from "./System/Collections/Generic/List.js";
 import ComparableObject from "./Entities/ComparableObject.js";
+import Dictionary from "./System/Collections/Generic/Dictionary.js";
 
 /*
   Permanent tests need to be put into Jest
@@ -13,78 +13,44 @@ const n = (someNumber: number): ComparableObject => {
   return new ComparableObject(someNumber);
 };
 
-const getArray = (size: number): Array<ComparableObject> => {
-  //Initializing the array size
-  const arr = new Array<ComparableObject>(size);
+const getMap = (size: number): Map<number, number> => {
+  const map = new Map<number, number>();
 
   for (let i = 0; i < size; i++) {
-    //Do not use push, must assign directly by index
-    arr[i] = n(i + 1);
+    var kvp = i + 1;
+
+    map.set(kvp, kvp);
   }
 
-  return arr;
+  return map;
 };
 
-const getList = (size: number = 0): List<ComparableObject> =>
-  new List<ComparableObject>(getArray(size));
-
-const toList = (array: Array<number>): List<ComparableObject> => {
-  const lst = new List<ComparableObject>();
-
-  array.forEach((x) => {
-    lst.add(n(x));
-  });
-
-  return lst;
-};
-
-const toArray = (list: Array<number>): Array<ComparableObject> => {
-  const arr = new Array<ComparableObject>();
-
-  list.forEach((x) => {
-    arr.push(n(x));
-  });
-
-  return arr;
-};
+const getDictionary = (size: number = 0): Dictionary<number, number> =>
+  new Dictionary<number, number>(getMap(size));
 
 const assertAreEqual = (
-  actual: List<ComparableObject>,
-  expected: Array<ComparableObject>
+  actual: Dictionary<number, number>,
+  expected: Map<number, number>
 ): boolean => {
   for (let i = 0; i < actual.count; i++) {
-    if (actual.get(i).notEquals(expected[i])) return false;
+    if (actual.get(i) !== expected.get(i)) return false;
   }
 
   return true;
 };
 
-//const lst = new List<ComparableObject>(getArray(10));
-//console.log("List", lst);
+const _ten = getDictionary(10);
 
-//console.log("Contains 5", lst.contains(new ComparableObject(5)));
+console.log("ten", _ten);
 
-//lst.add(undefined);
+const dict = new Dictionary<number, number>();
+dict.add(1, 1);
+dict.add(2, 2);
+dict.add(3, 3);
 
-const actual = toList([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
-const expected = getArray(10);
+console.log("Dict", dict);
 
-actual.sort();
-
-// console.log("Lst", actual);
-// console.log("Arr", expected);
-// console.log("assertion", assertAreEqual(actual, expected));
-
-//This will not allow duplicates if it knows how to do comparisons
-//const map = new Map<number, string>();
-// map.set(1, "one");
-// map.set(1, "one");
-
-const map = new Map<ComparableObject, string>();
-map.set(n(1), "one");
-map.set(n(1), "one");
-
-console.log("Map", map);
+console.log("ContainsKey", dict.containsKey(3));
 
 // F5 attaches debugger (slow) - compiles and runs, but it's VERY slow
 // Ctrl + F5 runs without attaching the debugger (faster) - it will not recompile anything first!
