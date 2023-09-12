@@ -67,28 +67,51 @@ test("Given non-empty dictionary, When checking for an item the dictionary does 
   expect(_ten.containsKey(20)).toBe(false);
 });
 
-// test("Given dictionary of ones, When using foreach to increment each element by one, Then each element is two", () => {
-//   const actual = new Dictionary<number, number>(
-//     new Map<number, number>([
-//       [1, 1],
-//       [1, 1],
-//       [1, 1],
-//     ])
-//   );
-//   const expected = new Map<number, number>([
-//     [1, 1],
-//     [1, 1],
-//     [1, 1],
-//   ]);
+test("Given dictionary of ones, When using foreach to increment each element by one, Then each element is two", () => {
+  const actual = new Dictionary<number, number>(
+    new Map<number, number>([
+      [1, 1],
+      [1, 1],
+      [1, 1],
+    ])
+  );
+  const expected = new Map<number, number>([
+    [1, 1],
+    [1, 1],
+    [1, 1],
+  ]);
 
-//   actual.forEach((kvp) => {
-//     kvp.key++;
-//     kvp.value!++;
-//   });
+  actual.forEach((kvp) => {
+    kvp.key++;
+    kvp.value!++;
+  });
 
-//   //Because this is a dictionary of primitives the values are not altered by the function. This is true in C# too.
-//   expect(assertAreEqual(actual, expected)).toBe(true);
-// });
+  //Because this is a dictionary of primitives the altered values cannot be persisted. I might change this later by raising
+  //an error for primitives. That's what happens in C#.
+  expect(assertAreEqual(actual, expected)).toBe(true);
+});
+
+test("Given dictionary sequence one through three, When using foreach to increment each element by one, Then a collision occurs", () => {
+  const actual = new Dictionary<number, number>(
+    new Map<number, number>([
+      [1, 1],
+      [2, 2],
+      [3, 3],
+    ])
+  );
+  const expected = new Map<number, number>([
+    [1, 1],
+    [2, 2],
+    [3, 3],
+  ]);
+
+  expect(() => {
+    actual.forEach((kvp) => {
+      kvp.key++;
+      kvp.value!++;
+    });
+  }).toThrow();
+});
 
 test("Given dictionary with one item, When removing the item, Then true is returned and the dictionary is empty", () => {
   const item = 1;

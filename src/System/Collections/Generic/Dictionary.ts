@@ -207,7 +207,14 @@ export default class Dictionary<TKey, TValue> {
      * I cannot prevent the user from modifying the key in either case, therefore the only thing I can do is raise
      * an error if they change the key's value which in turn is modifying the hashcode.
      * Therefore, a check for collisions must be made. */
-    for (const kvp of this._map.values()) {
+
+    //To prevent an infinit loop from occurring, an array must be produced first to have a finite list to work with
+    const arr = Array.from(this._map.values());
+
+    //A choice has to be made here:
+    // 1. Throw an error if the user changes the key directly, especially for primitive types
+    // 2. Just ignore the change like it is doing right now
+    arr.forEach((kvp) => {
       const before = this.hashKey(kvp.key);
 
       action(kvp);
@@ -215,7 +222,7 @@ export default class Dictionary<TKey, TValue> {
       const after = this.hashKey(kvp.key);
 
       //If the key has not changed then everything is fine
-      if (before === after) continue;
+      if (before === after) return;
 
       //If the key changed, then check to see if the new key already exists.
       const newEntry = this._map.get(after);
@@ -230,7 +237,7 @@ export default class Dictionary<TKey, TValue> {
       //If the key does not exist, then this is a confirmed exchange
       this._map.delete(before); //Delete the old key
       this._map.set(after, kvp); //Add the new key
-    }
+    });
   }
 
   get(key: TKey): TValue | undefined {

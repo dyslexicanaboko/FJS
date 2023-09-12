@@ -39,18 +39,33 @@ const assertAreEqual = (
   return true;
 };
 
-const _ten = getDictionary(10);
+const actual = new Dictionary<number, number>(
+  new Map<number, number>([
+    [1, 1],
+    [1, 1],
+    [1, 1],
+  ])
+);
+const expected = new Map<number, number>([
+  [1, 1],
+  [1, 1],
+  [1, 1],
+]);
 
-console.log("ten", _ten);
+console.log("Dict", actual);
+console.log("Map", expected);
 
-const dict = new Dictionary<number, number>();
-dict.add(1, 1);
-dict.add(2, 2);
-dict.add(3, 3);
+actual.forEach((kvp) => {
+  kvp.key++;
+  kvp.value!++;
+});
 
-console.log("Dict", dict);
+// const dict = new Dictionary<number, number>();
+// dict.add(1, 1);
+// dict.add(2, 2);
+// dict.add(3, 3);
 
-console.log("ContainsKey", dict.containsKey(3));
+// console.log("Dict", dict);
 
 // F5 attaches debugger (slow) - compiles and runs, but it's VERY slow
 // Ctrl + F5 runs without attaching the debugger (faster) - it will not recompile anything first!
