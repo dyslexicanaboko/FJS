@@ -18,6 +18,20 @@ export const defaultComparer = <T>(left: T, right: T): number => {
   return 1;
 };
 
+export const defaultEquals = (left: any, right: any): boolean => {
+  //If both are undefined then left = right
+  if (!left && !right) return true;
+
+  //If left is undefined then left < right
+  if (!left) return false;
+
+  //If right is undefined then left > right
+  if (!right) return false;
+
+  //If neither is undefined, then do a proper compare
+  return left.equals(right);
+};
+
 /* There isn't an available way to check if the type T being passed into this class:
  *   1. implements an interface
  *   2. extends another class

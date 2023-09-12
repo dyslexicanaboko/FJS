@@ -2,6 +2,7 @@ import {
   hasEqualsFunction,
   hasGetHashCodeFunction,
   defaultGetHashCode,
+  defaultEquals,
 } from "../../../utils.js";
 import IEqualityComparer from "./IEqualityComparer.js";
 import KeyValuePair from "./KeyValuePair.js";
@@ -18,6 +19,11 @@ export default class Dictionary<TKey, TValue> {
   private _comparer: IEqualityComparer<TKey> | undefined;
   private _getHashCode: (key: TKey) => number;
   private _comparerMode: ComparerMode;
+  private _comparerModeTValue: ComparerMode = ComparerMode.Default;
+  private _equals: (
+    left: TValue | undefined,
+    right: TValue | undefined
+  ) => boolean;
 
   public constructor(map: Map<TKey, TValue>);
   public constructor(map: undefined, compare: IEqualityComparer<TKey>);
@@ -33,6 +39,8 @@ export default class Dictionary<TKey, TValue> {
         this.add(key, value);
       }
     }
+
+    this._equals = defaultEquals;
 
     this._comparer = compare;
 
@@ -140,30 +148,48 @@ export default class Dictionary<TKey, TValue> {
     return this._map.has(hashCode);
   }
 
+  private testTValueEquals(value: TValue): void {
+    //If the comparer is set to something other than Default then don't change anything
+    if (this._comparerModeTValue !== ComparerMode.Default) return;
+
+    //If the TValue does not supply an equals function then the default compare is as good as it can be
+    if (!hasEqualsFunction(value)) {
+      //Prevent any further redundant checks by locking out the comparer mode
+      this._comparerModeTValue = ComparerMode.DefaultLocked;
+
+      return;
+    }
+
+    this._comparerModeTValue = ComparerMode.Internal;
+
+    this._equals = (left: TValue | undefined, right: TValue | undefined) => {
+      //If both are undefined then left = right
+      if (!left && !right) return true;
+
+      //If left is undefined then left < right
+      if (!left) return false;
+
+      //If right is undefined then left > right
+      if (!right) return false;
+
+      //If neither is undefined, then do a proper compare
+      return (left as any).equals(right);
+    };
+  }
+
   //C# will use TValue's internal GetHashCode() and Equals(object) methods. Therefore, to increase its
   //chances of success the user needs to override those methods.
   containsValue(value: TValue): boolean {
-    //TODO: Need to have a separate comparer test for values, lockout if not possible
-    if (hasEqualsFunction(value)) {
-      return this.linearSearchValue(value) !== undefined;
-    }
+    this.testTValueEquals(value);
 
     //https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html
-    for (const v of this._map.values()) {
-      if (v === value) return true;
+    for (const kvp of this._map.values()) {
+      const v = kvp.value;
+
+      if (this._equals(value, v)) return true;
     }
 
     return false;
-  }
-
-  //The TValue cannot utilize hashes so it will rely on the equals function instead
-  //This separate function may not even be needed anymore
-  private linearSearchValue(item: any): TValue | undefined {
-    for (const value of this._map.values()) {
-      if (item.equals(value)) return value;
-    }
-
-    return undefined;
   }
 
   get(key: TKey): TValue | undefined {
@@ -183,13 +209,4 @@ export default class Dictionary<TKey, TValue> {
 
   //Cannot safely implement out parameters in JavaScript because there is no explicit equivalent
   //tryGetValue
-
-  //This is not required anymore since I am going to rely on hashcode for all key related searches
-  // private linearSearchKey(item: any): KeyValuePair<TKey, TValue> | undefined {
-  //   for (const key of this._map.keys()) {
-  //     if (item.equals(key)) return { key: key, value: this._map.get(key) };
-  //   }
-
-  //   return undefined;
-  // }
 }
