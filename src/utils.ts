@@ -65,17 +65,16 @@ export const defaultGetHashCode = (key: any): number => {
   if (typeof key === "number") return key;
 
   //https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/string.cs#L833
-  //This is an adaptation of the C# algorithm, they won't be the same because JavaScript doesn't have pointers
+  //This is an adaptation of the C# algorithm. They cannot syntactically be the same because JavaScript doesn't have pointers
   if (typeof key === "string") {
     let hash1 = 5381;
-    let hash2 = 5381;
+    let hash2 = hash1;
 
     let s = getCharCodes(key); //char *s = src;
     let c: number; //int c;
 
     //Based on what I currently understand, the C# algorithm takes the character array and iterates over it
     //by two bytes at a time. Each frame is hashed using the hash1 and hash2 variables.
-    //while ((c = s[0]) != 0)
     for (let i = 0; i < s.length; i++) {
       c = s[i]; //Get frame
 
@@ -88,7 +87,11 @@ export const defaultGetHashCode = (key: any): number => {
       }
     }
 
-    return hash1 + hash2 * 1566083941;
+    //https://stackoverflow.com/questions/23577810/simulate-a-32-bit-integer-overflow-in-javascript
+    //The main difference between this and the C# algorithm is that the C# algorithm is running this
+    //code in unchecked mode. This means that the integer overflow is ignored. In JavaScript you can
+    //use the Math.imul() function to simulate this same behavior.
+    return hash1 + Math.imul(hash2, 1566083941);
   }
 
   if (typeof key === "boolean") return key ? 1 : 0;
