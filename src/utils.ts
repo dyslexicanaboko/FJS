@@ -1,3 +1,5 @@
+import DateTime from "./System/DateTime.js";
+
 //Is left -1 <, 1 >, 0 = then right
 export const defaultComparer = <T>(left: T, right: T): number => {
   //If both are undefined then left = right
@@ -59,10 +61,77 @@ export const hasGetHashCodeFunction = (item: any): boolean => {
 };
 
 export const defaultGetHashCode = (key: any): number => {
-  //TODO: Primitives will have a default hashing algorithm, but complex types won't
+  //The if statements are ordered by most likely to least likely
   if (typeof key === "number") return key;
+
+  //https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/string.cs#L833
+  //This is an adaptation of the C# algorithm, they won't be the same because JavaScript doesn't have pointers
+  if (typeof key === "string") {
+    let hash1 = 5381;
+    let hash2 = 5381;
+
+    let s = getCharCodes(key); //char *s = src;
+    let c: number; //int c;
+
+    //Based on what I currently understand, the C# algorithm takes the character array and iterates over it
+    //by two bytes at a time. Each frame is hashed using the hash1 and hash2 variables.
+    //while ((c = s[0]) != 0)
+    for (let i = 0; i < s.length; i++) {
+      c = s[i]; //Get frame
+
+      if (i % 2 === 0) {
+        //Frame 1 gets the event indices
+        hash1 = ((hash1 << 5) + hash1) ^ c;
+      } else {
+        //Frame 2 gets the odd indices
+        hash2 = ((hash2 << 5) + hash2) ^ c;
+      }
+    }
+
+    return hash1 + hash2 * 1566083941;
+  }
+
+  if (typeof key === "boolean") return key ? 1 : 0;
+
+  if (typeof key === "bigint") {
+    try {
+      //This is probably a bad idea, hence the try/catch
+      return parseInt(key.toString());
+    } catch (error) {
+      console.warn(
+        "BigInt conversion to int failed. A random hash code has been used instead."
+      );
+
+      return getCrappyHashCode();
+    }
+  }
 
   //This is crappy, but it's the best you can have if you don't implement the getHashCode function
   //It will be as crappy in C# when you don't implement the GetHashCode function
-  return Math.round(Math.random() * 100000000000);
+  return getCrappyHashCode();
+};
+
+const getCharCodes = (str: string): number[] => {
+  const charCodes: number[] = [];
+
+  for (let i = 0; i < str.length; i++) {
+    charCodes.push(str.charCodeAt(i));
+  }
+
+  return charCodes;
+};
+
+const getCrappyHashCode = (): number =>
+  Math.round(Math.random() * 100000000000);
+
+export const isPrimitiveType = (target: any): boolean => {
+  return (
+    typeof target === "string" ||
+    typeof target === "number" ||
+    typeof target === "bigint" ||
+    typeof target === "boolean" ||
+    typeof target === "symbol" ||
+    target instanceof Date ||
+    target instanceof DateTime
+  );
 };

@@ -3,6 +3,7 @@
 import DateTime from "./System/DateTime.js";
 import ComparableObject from "./Entities/ComparableObject.js";
 import Dictionary from "./System/Collections/Generic/Dictionary.js";
+import { defaultGetHashCode } from "./utils.js";
 
 /*
   Permanent tests need to be put into Jest
@@ -39,26 +40,30 @@ const assertAreEqual = (
   return true;
 };
 
-const actual = new Dictionary<number, number>(
-  new Map<number, number>([
-    [1, 1],
-    [1, 1],
-    [1, 1],
-  ])
-);
-const expected = new Map<number, number>([
-  [1, 1],
-  [1, 1],
-  [1, 1],
-]);
+// const actual = new Dictionary<number, number>(
+//   new Map<number, number>([
+//     [1, 1],
+//     [1, 1],
+//     [1, 1],
+//   ])
+// );
+// const expected = new Map<number, number>([
+//   [1, 1],
+//   [1, 1],
+//   [1, 1],
+// ]);
 
-console.log("Dict", actual);
-console.log("Map", expected);
+// console.log("Dict", actual);
+// console.log("Map", expected);
 
-actual.forEach((kvp) => {
-  kvp.key++;
-  kvp.value!++;
-});
+// actual.forEach((kvp) => {
+//   kvp.key++;
+//   kvp.value!++;
+// });
+
+console.log("number", defaultGetHashCode(10));
+console.log("boolean", defaultGetHashCode(true));
+console.log("string", defaultGetHashCode("string")); //285468193110112700
 
 // const dict = new Dictionary<number, number>();
 // dict.add(1, 1);

@@ -3,6 +3,7 @@ import {
   hasGetHashCodeFunction,
   defaultGetHashCode,
   defaultEquals,
+  isPrimitiveType,
 } from "../../../utils.js";
 import IEqualityComparer from "./IEqualityComparer.js";
 import KeyValuePair from "./KeyValuePair.js";
@@ -20,6 +21,7 @@ export default class Dictionary<TKey, TValue> {
   private _getHashCode: (key: TKey) => number;
   private _comparerMode: ComparerMode;
   private _comparerModeTValue: ComparerMode = ComparerMode.Default;
+  private _isKeyPrimitiveType: boolean = false;
   private _equals: (
     left: TValue | undefined,
     right: TValue | undefined
@@ -108,6 +110,9 @@ export default class Dictionary<TKey, TValue> {
   private testComparer(key: TKey): void {
     //If the comparer is set to something other than Default then don't change anything
     if (this._comparerMode !== ComparerMode.Default) return;
+
+    //Taking advantage that this will lockout to put this here
+    this._isKeyPrimitiveType = isPrimitiveType(key);
 
     //If the key does not supply a getHashCode function then the default compare is as good as it can be
     if (!hasGetHashCodeFunction(key)) {
@@ -209,11 +214,9 @@ export default class Dictionary<TKey, TValue> {
      * Therefore, a check for collisions must be made. */
 
     //To prevent an infinit loop from occurring, an array must be produced first to have a finite list to work with
+    //JavaScript lets you modify a map while you are using the IterableIterator, this can cause an infinite loop to occur.
     const arr = Array.from(this._map.values());
 
-    //A choice has to be made here:
-    // 1. Throw an error if the user changes the key directly, especially for primitive types
-    // 2. Just ignore the change like it is doing right now
     arr.forEach((kvp) => {
       const before = this.hashKey(kvp.key);
 
@@ -223,6 +226,14 @@ export default class Dictionary<TKey, TValue> {
 
       //If the key has not changed then everything is fine
       if (before === after) return;
+
+      //In C#, you cannot modify the key or value of a KeyValuePair of primitive types, but you can get away with
+      //modifying the properties of a custom class.
+      if (this._isKeyPrimitiveType) {
+        throw new Error(
+          "Property or indexer cannot be assigned to -- it is read only"
+        );
+      }
 
       //If the key changed, then check to see if the new key already exists.
       const newEntry = this._map.get(after);
