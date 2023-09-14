@@ -67,7 +67,7 @@ test("Given non-empty dictionary, When checking for an item the dictionary does 
   expect(_ten.containsKey(20)).toBe(false);
 });
 
-test("Given dictionary of ones, When using foreach to increment each element by one, Then each element is two", () => {
+test("Given dictionary of ones, When using foreach to increment each element by one, An exception is raised because primitive indexers cannot be altered", () => {
   const actual = new Dictionary<number, number>(
     new Map<number, number>([
       [1, 1],
@@ -81,14 +81,14 @@ test("Given dictionary of ones, When using foreach to increment each element by 
     [1, 1],
   ]);
 
-  actual.forEach((kvp) => {
-    kvp.key++;
-    kvp.value!++;
-  });
-
-  //Because this is a dictionary of primitives the altered values cannot be persisted. I might change this later by raising
-  //an error for primitives. That's what happens in C#.
-  expect(assertAreEqual(actual, expected)).toBe(true);
+  //Because this is a dictionary of primitives the values cannot be altered. Therefore an exception will be raised.
+  //This is the same behavior in C#.
+  expect(() => {
+    actual.forEach((kvp) => {
+      kvp.key++;
+      kvp.value!++;
+    });
+  }).toThrow();
 });
 
 test("Given dictionary sequence one through three, When using foreach to increment each element by one, Then a collision occurs", () => {
