@@ -15,17 +15,6 @@ const getMap = (size: number): Map<number, number> => {
 const getDictionary = (size: number = 0): Dictionary<number, number> =>
   new Dictionary<number, number>(getMap(size));
 
-const assertAreEqual = (
-  actual: Dictionary<number, number>,
-  expected: Map<number, number>
-): boolean => {
-  for (let i = 0; i < actual.count; i++) {
-    if (actual.get(i) !== expected.get(i)) return false;
-  }
-
-  return true;
-};
-
 const _ten = getDictionary(10);
 const _empty = getDictionary();
 const _someNumber: number = 5829467163;

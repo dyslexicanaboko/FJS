@@ -161,7 +161,8 @@ const getCharCodes = (str: string): number[] => {
   return charCodes;
 };
 
-const getHashCodeRandom = (): number => {
+//If you are using this, you are doing it wrong unless it's for demonstrations or you have not implemented the getHashCode function yet.
+export const getHashCodeRandom = (): number => {
   //Hashcodes can be negative sometimes, so sure why not
   const polarity = (Math.random() * 100000) % 2 === 0 ? 1 : -1;
 

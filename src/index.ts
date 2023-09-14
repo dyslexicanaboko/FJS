@@ -14,58 +14,31 @@ const n = (someNumber: number): ComparableObject => {
   return new ComparableObject(someNumber);
 };
 
-const getMap = (size: number): Map<number, number> => {
-  const map = new Map<number, number>();
+const getMap = (size: number): Map<ComparableObject, ComparableObject> => {
+  const map = new Map<ComparableObject, ComparableObject>();
 
   for (let i = 0; i < size; i++) {
     var kvp = i + 1;
 
-    map.set(kvp, kvp);
+    console.log("kvp", kvp);
+
+    map.set(n(kvp), n(kvp));
   }
 
   return map;
 };
 
-const getDictionary = (size: number = 0): Dictionary<number, number> =>
-  new Dictionary<number, number>(getMap(size));
+const getDictionary = (
+  size: number = 0
+): Dictionary<ComparableObject, ComparableObject> =>
+  new Dictionary<ComparableObject, ComparableObject>(getMap(size));
 
-const assertAreEqual = (
-  actual: Dictionary<number, number>,
-  expected: Map<number, number>
-): boolean => {
-  for (let i = 0; i < actual.count; i++) {
-    if (actual.get(i) !== expected.get(i)) return false;
-  }
-
-  return true;
-};
-
-// const actual = new Dictionary<number, number>(
-//   new Map<number, number>([
-//     [1, 1],
-//     [1, 1],
-//     [1, 1],
-//   ])
-// );
-// const expected = new Map<number, number>([
-//   [1, 1],
-//   [1, 1],
-//   [1, 1],
-// ]);
-
-// console.log("Dict", actual);
-// console.log("Map", expected);
-
-// actual.forEach((kvp) => {
-//   kvp.key++;
-//   kvp.value!++;
-// });
+getDictionary(10);
 
 // console.log("number", getHashCodeForAny(10));
 // console.log("boolean", getHashCodeForAny(true));
 // console.log("string", getHashCodeForAny("string"));
-console.log("DateTime", getHashCodeForDateTime(DateTime.today));
-
+//console.log("DateTime", getHashCodeForDateTime(DateTime.today));
 // const dict = new Dictionary<number, number>();
 // dict.add(1, 1);
 // dict.add(2, 2);
