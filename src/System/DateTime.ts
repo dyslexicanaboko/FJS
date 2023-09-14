@@ -1,6 +1,7 @@
 import TimeSpan from "./TimeSpan.js";
 import { FirstDayOfTheMonth, GreatestCommonDayOfMonth } from "../constants.js";
 import { formatTimeStamp } from "../string-formats.js";
+import { getHashCodeForDateTime } from "../utils.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.datetime?view=net-7.0
 //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
@@ -186,7 +187,7 @@ export default class DateTime {
    https://learn.microsoft.com/en-us/dotnet/api/system.datetime.ticks?view=net-7.0#remarks
    A single tick represents one hundred nanoseconds or one ten-millionth of a second.
    There are 10,000 ticks in a millisecond (see TicksPerMillisecond) and 10 million ticks in a second. */
-  private totalMilliseconds(): number {
+  get totalMilliseconds(): number {
     return this._dateTime.getTime();
   }
 
@@ -245,7 +246,7 @@ export default class DateTime {
   }
 
   subtract(other: DateTime): TimeSpan {
-    const msDiff = this.totalMilliseconds() - other.totalMilliseconds();
+    const msDiff = this.totalMilliseconds - other.totalMilliseconds;
 
     return new TimeSpan(msDiff);
   }
@@ -284,5 +285,9 @@ export default class DateTime {
       this.second === other.second &&
       this.millisecond === other.millisecond
     );
+  }
+
+  getHashCode(): number {
+    return getHashCodeForDateTime(this);
   }
 }

@@ -1,7 +1,7 @@
 import {
   hasEqualsFunction,
   hasGetHashCodeFunction,
-  defaultGetHashCode,
+  getHashCodeForAny,
   defaultEquals,
   isPrimitiveType,
 } from "../../../utils.js";
@@ -53,7 +53,7 @@ export default class Dictionary<TKey, TValue> {
       this._comparerMode = ComparerMode.Default;
 
       this._getHashCode = (key: TKey) => {
-        return defaultGetHashCode(key);
+        return getHashCodeForAny(key);
       };
     }
 

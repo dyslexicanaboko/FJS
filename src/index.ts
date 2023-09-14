@@ -3,7 +3,7 @@
 import DateTime from "./System/DateTime.js";
 import ComparableObject from "./Entities/ComparableObject.js";
 import Dictionary from "./System/Collections/Generic/Dictionary.js";
-import { defaultGetHashCode } from "./utils.js";
+import { getHashCodeForAny, getHashCodeForDateTime } from "./utils.js";
 
 /*
   Permanent tests need to be put into Jest
@@ -61,9 +61,10 @@ const assertAreEqual = (
 //   kvp.value!++;
 // });
 
-console.log("number", defaultGetHashCode(10));
-console.log("boolean", defaultGetHashCode(true));
-console.log("string", defaultGetHashCode("string")); //285468193110112700
+// console.log("number", getHashCodeForAny(10));
+// console.log("boolean", getHashCodeForAny(true));
+// console.log("string", getHashCodeForAny("string"));
+console.log("DateTime", getHashCodeForDateTime(DateTime.today));
 
 // const dict = new Dictionary<number, number>();
 // dict.add(1, 1);
