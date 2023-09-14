@@ -1,6 +1,7 @@
 import IObject from "../System/IObject.js";
 import IEquatable from "../System/IEquatable.js";
 import IComparable from "../System/IComparable.js";
+import { getHashCodeForNumber } from "../utils.js";
 
 export default class ComparableObject
   implements
@@ -46,7 +47,7 @@ export default class ComparableObject
   //This is technically inherited from System.Object automatically, but since JavaScript
   //does not have a notion of hashing, then I am using an interface to enforce it.
   getHashCode(): number {
-    return -7; //This will be implemented when I work on the Dictionary class
+    return getHashCodeForNumber(this._someNumber);
   }
 
   compareTo(other: ComparableObject): number {
