@@ -1,3 +1,4 @@
+// This can totally be ignored. It's just a list of words that I don't want the spellchecker to flag as misspelled in markdown files.
 {
   "spellchecker.ignoreWordsList": [
     "TicksPerMillisecond",
@@ -15,6 +16,19 @@
     "indices",
     "setMonths",
     "AddMonths",
-    "dateValue"
+    "dateValue",
+    "utils",
+    "bool",
+    "Int32",
+    "Int64",
+    "bigint",
+    "BigInteger",
+    "float",
+    "double",
+    "decimal",
+    "Decimal",
+    "DateTimeOffset",
+    "DateTimeKind",
+    "hacky"
   ]
 }

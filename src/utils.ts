@@ -66,7 +66,8 @@ export const getHashCodeForBoolean = (target: boolean): number =>
   target ? 1 : 0;
 
 //https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/string.cs#L833
-//This is an adaptation of the C# algorithm. They cannot syntactically be the same because JavaScript doesn't have pointers
+//This is an adaptation of the C# algorithm. They cannot syntactically be the same because
+//JavaScript doesn't have user accessible pointers
 export const getHashCodeForString = (target: string): number => {
   let hash1 = 5381;
   let hash2 = hash1;

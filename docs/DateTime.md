@@ -95,7 +95,7 @@ The only controversy surrounding this function is the fact that it returns an IN
 
 You would think that the controversy would end with an index being required to set your month, but no. The `setMonth()` function has a logical bias embedded into it which I think is terrible. To be absolutely fair, the C# DateTime `AddMonth()` implementation has its own bias, but I think it makes FAR MORE SENSE.
 
-First off, the naming convention once again is misleading. The `setMonth()` function isn't setting the month using a mutator as the name implies. It is performing a calculation based on the number of days in that month. Again, totally misleading and unwarranted. Why was this function named like an mutator, when it isn't. The appropriate name should have been `addMonth()`.
+First off, the naming convention once again is misleading. The `setMonth()` function isn't setting the month using a mutator as the name implies. It is performing a calculation based on the number of days in that month. Again, totally misleading and unwarranted. Why was this function named like a mutator, when it isn't. The appropriate name should have been `addMonth()`.
 
 #### Examples
 
@@ -129,7 +129,7 @@ The `System.DateTime.AddMonths()` method does two useful things:
 | Leap Year | Days | Example    |
 | --------- | ---- | ---------- |
 | No        | 28   | 02/28/2023 |
-| Yes       | 29   | 02/29/2023 |
+| Yes       | 29   | 02/29/2024 |
 
 This means that you are guaranteed to not rollover days like JS does for you.
 
