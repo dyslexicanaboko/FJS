@@ -20,7 +20,7 @@
     "test0-comment": "Run specific test suites: https://jestjs.io/docs/cli#--runtestsbypath"
   },
   "author": "Eli Hayon",
-  "license": "ISC",
+  "license": "GPL-3.0 license",
   "devDependencies": {
     "@babel/cli": "^7.22.10",
     "@babel/core": "^7.22.11",
