@@ -22,12 +22,12 @@ For this comparison I am only going to include the available types from JS becau
 | JS Type   | Is Primitive | C# Type       | Is Primitive | Comments                                                                                                                                                                                         |
 | --------- | ------------ | ------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | string    | Yes          | string        | Yes          | This is a reference type in C# but it's treated like a primitive which pisses a lot of people off. I think it makes sense though and I will explain at the bottom.                               |
-| number    | Yes          | Int32 & Int64 | Yes          | JS number is a 64-bit integer. In C# we normally default to int which is 32-bit and use long when we have to which is int-64                                                                     |
+| number    | Yes          | Int32 & Int64 | Yes          | JS number is a 64-bit integer. In C# we normally default to `int` which is 32-bit and use `long` when we have to which is 64-bit.                                                                |
 | bigint    | Yes          | BigInteger    | No           | Not sure how this is considered a primitive in JS. It is a complex type and not what I would consider a normal building block of a class.                                                        |
 | boolean   | Yes          | bool          | Yes          |                                                                                                                                                                                                  |
 | undefined | Yes          | null          | No           | I never understood why this was ever a thing and frankly there is no difference between it and null other than JS making everyones life difficult for _reasons_.No                               |
 | symbol    | Yes          | Object-ish    | Yes          | There isn't really an equivalent in C#. You can argue it's Object, but not really. This is more like creating atoms in [Elixir](https://elixir-lang.org/getting-started/basic-types.html#atoms). |
-| null      | Yes          | null          | No           | There is no valid discernible difference for having `underfined` and `null`.                                                                                                                     |
+| null      | Yes          | null          | No           | There is no valid discernible difference for having `undefined` and `null`.                                                                                                                      |
 | Date      | No           | DateTime      | No           | Both JS and C# agree this is not a primitive. I disagree because it's a fundamental building block of classes.                                                                                   |
 | Object    | No           | Object        | No           | This is the foundation for everything in both JS and C#.                                                                                                                                         |
 
@@ -43,12 +43,12 @@ JS only has support for comparing primitive types. There is literally no such th
 
 <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness>
 
-| Operation  | Example                      | Comments                                                                                                                       |
-| ---------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| ==         | `a == b`                     | loose equals - this is probably one of the worst things ever introduced into programming. Truthy/Falsey should not be a thing. |
-| ===        | `a === b`                    | strict equals - this is what everyone wants because it MAKES SENSE.                                                            |
-| typeof     | `typeof target === "number"` | Determining if a variable is of primitive type.                                                                                |
-| instanceof | `target instanceof Date`     | Determining if a variable is of object type.                                                                                   |
+| Operation  | Example                      | Comments                                                                                                                      |
+| ---------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| ==         | `a == b`                     | loose equals - this is probably one of the worst things ever introduced into programming. Truthy/Falsy should not be a thing. |
+| ===        | `a === b`                    | strict equals - this is what everyone wants because it MAKES SENSE.                                                           |
+| typeof     | `typeof target === "number"` | Determining if a variable is of primitive type.                                                                               |
+| instanceof | `target instanceof Date`     | Determining if a variable is of object type.                                                                                  |
 
 > There are more types of comparisons, but for the purposes of this discussion these are what matter.
 
@@ -96,3 +96,12 @@ I created two objects for testing. One has the hashing and equality methods impl
 
 - [ComparableObject.ts](/src/Entities/ComparableObject.ts)
 - [DumbObject.ts](/src/Entities/DumbObject.ts)
+
+## Hashing algorithms
+
+I am shamelessly copying the hashing algorithms from C# if I can port them over. So far I have been able to replicate `string` and `DateTime`. The results cannot be the same, but I know that the algorithms are identical after I cross tested values. I will produce some unit tests at a later time for this since this is an early implementation.
+
+- [string.cs](https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/string.cs#L833)
+- [datetime.cs](https://github.com/microsoft/referencesource/blob/master/mscorlib/system/datetime.cs#L979)
+
+These algorithms have been converted to JS equivalents.

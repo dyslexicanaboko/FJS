@@ -117,7 +117,7 @@ export const getHashCodeForDateTime = (target: DateTime): number =>
 export const getHashCodeForDate = (target: Date): number =>
   getHashCodeForTotalMilliseconds(target.getTime());
 
-//https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/datetime.cs
+//https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/datetime.cs#L979
 //This will not be one to one with the C# algorithm because JavaScript doesn't support the concept of ticks.
 //Frankly it probably can, but I am not going to kill myself to get that to work.
 const getHashCodeForTotalMilliseconds = (kindOfLikeTicks: number): number => {

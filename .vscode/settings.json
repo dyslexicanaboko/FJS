@@ -29,6 +29,13 @@
     "Decimal",
     "DateTimeOffset",
     "DateTimeKind",
-    "hacky"
+    "hacky",
+    "Truthy",
+    "Falsy",
+    "typeof",
+    "instanceof",
+    "ComparableObject",
+    "DumbObject",
+    "datetime"
   ]
 }
