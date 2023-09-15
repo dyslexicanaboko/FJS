@@ -79,7 +79,7 @@ export default class List<T> {
     //Through the power of crackhead magic, this syntax functions as two things:
     //1. Store the supplied item at this index (overwrite).
     //2. Add a new element to the end of the array and increase the array's size by one
-    //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a queue.
+    //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a stack.
     //If this was done on a C# List<T>, even if there is Capacity, an `ArgumentOutOfRangeException` would be thrown.
     this._arr[this._nextIndex] = item;
 

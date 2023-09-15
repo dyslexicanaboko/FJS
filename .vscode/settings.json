@@ -1,1 +1,20 @@
-{}
+{
+  "spellchecker.ignoreWordsList": [
+    "TicksPerMillisecond",
+    "DateTime",
+    "struct",
+    "getDate",
+    "getDay",
+    "getMonth",
+    "setMonth",
+    "getTime",
+    "getYear",
+    "getFullYear",
+    "JS's",
+    "accessor",
+    "indices",
+    "setMonths",
+    "AddMonths",
+    "dateValue"
+  ]
+}

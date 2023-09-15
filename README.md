@@ -8,9 +8,9 @@ This is a sensible C# inspired take on JavaScript's crappier nearly unusable sto
 
 ## High-level
 
-The number of times I have had a head slapping moment using JS has formed a little crater in my forehead. For a language that we are all forced to use for web development, it's quite lacking. It has gotten better over the years, but there are still some things to this day that are just embarrassing. So I thought it would be fun to replicate C# objects using JS to see how far I could take irony of developing in JS to use C# objects in JS ultimately. If you haven't figured it out already this is mostly a joke. So if you are getting upset - don't - I am just poking fun at the Stockholm syndrome of programming languages.
+The number of times I have had a head slapping moment using JS has formed a little crater in my forehead. For a language that we are all forced to use for web development, it's quite lacking. It has gotten better over the years, but there are still some things to this day that are just embarrassing. So I thought it would be fun to replicate C# objects using JS to see how far I could take irony of developing in JS to use C# objects in JS ultimately. If you haven't figured it out already this is mostly a joke. So if you are getting upset _don't_; I am just poking fun at the Stockholm syndrome of programming languages.
 
-Below is a list of what I am fixing so far. I am only plan on adding things as needed.
+Below is a list of what I have implemented so far. I am only planning on adding things as needed.
 
 ### File organization
 
@@ -23,7 +23,7 @@ JavaScript's `Date` object is one of the most ubiquitously hated objects to use 
 - [JS Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)
 - [C# DateTime](https://learn.microsoft.com/en-us/dotnet/api/system.datetime)
 
-There are so many problems with JS Date it gets its own ReadMe.
+There are so many problems with JS Date it gets its own [ReadMe](/docs/DateTime.md).
 
 ## TimeSpan
 
@@ -47,23 +47,31 @@ Here is a list of key differences between the two `object` constructs:
 | GetHashCode | N/A         | This is totally a foreign concept in JS.                                                                                  |
 | ToString    | toString    | This does exist and can be overridden (shadowed).                                                                         |
 
-This interface accepts a generic of type `T` so that the equals function knows what it is trying to equate to. This [diverges from what C# does](https://learn.microsoft.com/en-us/dotnet/api/system.object.equals), but this exercise is never going to be perfectly equal. Just better than JS today. Therefore, there isn't a benefit to implementing an `object.prototype` or `any` type compare.
+This interface accepts a generic of type `T` so that the equals function knows what it is trying to equate to. This [diverges from what C# does](https://learn.microsoft.com/en-us/dotnet/api/system.object.equals), but this exercise is never going to be perfectly replicate C#. It's just going to better than what JS has to offer today. Therefore, there isn't a benefit to implementing an equals method that takes `object.prototype` or `any` type as an argument for compare.
 
 ## IEquatable{T}
 
-https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1
+<https://learn.microsoft.com/en-us/dotnet/api/system.iequatable-1>
 
 There is no equivalent in JS for this. I just wanted to follow the same pattern provided in C# where you would implement this interface to get additional benefits from collections and other objects that need the `Equals(T)` method.
 
+There is overlap between this interface and `IObject{T}` and that's on purpose.
+
+## IComparable{T}
+
+<https://learn.microsoft.com/en-us/dotnet/api/system.icomparable-1>
+
+There is no equivalent in JS for this. It is required for sorting objects.
+
 ## IEqualityComparer{T}
 
-https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.iequalitycomparer-1
+<https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.iequalitycomparer-1>
 
 There is no equivalent in JS for this. I implemented it so I could use it with my `Dictionary<TKey, TValue>` implementation.
 
 ## KeyValuePair{TKey, TValue}
 
-https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.keyvaluepair-2
+<https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.keyvaluepair-2>
 
 You could argue that there are equivalents for this in JS, but not really. This is used in conjunction with my `Dictionary<TKey, TValue>` implementation.
 
@@ -79,7 +87,7 @@ JS Arrays, really shouldn't be called Arrays - it's a poorly managed array that 
 - [C# Array](https://learn.microsoft.com/en-us/dotnet/api/system.array)
 - [C# List{T}](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)
 
-There are so many problems with JS Arrays it gets its own ReadMe.
+There are so many problems with JS Arrays it gets its own [ReadMe](/docs/List.md).
 
 ## Dictionary{TKey, TValue}
 
@@ -88,24 +96,26 @@ JS Maps are actually not that bad, but they still kind of suck for one reason. J
 - [JS Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 - [C# Dictionary{TKey, TValue}](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)
 
-There are several problems with JS Maps, so it too gets its own ReadMe.
+There are several problems with JS Maps, so it too gets its own [ReadMe](/docs/Dictionary.md).
 
 ## Hashing and Equality
 
 Since hashing isn't a thing in JS I had to come up with some ways to do it. And when I say come up with ways to do it I mean rip off C# as best as I can. Shockingly I was able to implement equivalent hashing algorithms for both `System.DateTime` and `System.string`. I honestly didn't think it could be done, but alas here we are and we are better for it :D.
 
-This is a complicated subject, so it gets its own ReadMe.
+This is a complicated subject, so it gets its own [ReadMe](/docs/HashingAndEquality.md).
+
+---
 
 ## I still don't know what the F stands for
 
 What does the F stand for in BFG 9000?
 
----
+## Final words
 
 Lastly I just want to shout myself out for doing this for the world. It couldn't have been done without my selfless efforts.
 
-Pascal I made it!
+_We can do better than JavaScript. Think of the children._
 
-# YOU'RE WELCOME
+~ **YOU'RE WELCOME** ~
 
-_We can do better than JavaScript seriously..._
+> Pascal I did it!
