@@ -108,13 +108,13 @@ This is a complicated subject, so it gets its own [ReadMe](/docs/HashingAndEqual
 
 ## I still don't know what the F stands for
 
-What does the F stand for in BFG 9000?
+What does the F stand for in BFG 9000? If you can't answer that question, you are making me feel old and that's rude.
 
 ## Final words
 
 Lastly I just want to shout myself out for doing this for the world. It couldn't have been done without my selfless efforts.
 
-_We can do better than JavaScript. Think of the children._
+_We can do better than JavaScript. Please, think of the children._
 
 ~ **YOU'RE WELCOME** ~
 
