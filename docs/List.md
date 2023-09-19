@@ -1,12 +1,12 @@
 # List{T}
 
-Arrays in JavaScript... oof... calling these things arrays is too generous. Arrays in JS are a deceptive construct, not nearly as bad as the JS Date object, but nearly as bad. I have already called out JS for using poor naming conventions and behaving illogically on the front page, but I am just going to really drive the point home here.
+Arrays in JavaScript... oof... calling these things arrays is too generous. Arrays in JS are a deceptive construct, not nearly as bad as the JS Date object, but almost as bad. I have already called out JS for using poor naming conventions and behaving illogically on the front page, but I am going to drive the point home here differently.
 
-> Arrays in JavaScript do not behave like a traditional array because they are `mutable`. Therefore, they are more like a weird list that also wants to be a map, that also wants to be a stack. This is a confused construct and in doing so it just confuses the end user.
+> Arrays in JavaScript do not behave like a traditional array because they are `mutable`. Therefore, they are more like a weird managed array that also wants to be a map, that also wants to be a stack. This is a confused construct and in doing so it just confuses the end user.
 
 ## Lack of zero based indexing
 
-JS Arrays do not enforce how its index is tracked. They do not have an internal index pointer for keeping track of what is the highest index available. To make matters worse, you can just provide whatever index you want at any time. Therefore, a JS Array is actually more of a Map than an array. The only constraint it has is that the index _should_ be a non-negative integer. I am saying _should_ as opposed to _must_ because in typically JS fashion it will let you hang yourself since it lacks structure.
+JS Arrays do not enforce how its index is tracked. However, they do have an internal index pointer for keeping track of what is the highest index available. It just doesn't work well. To make matters worse, you can just provide whatever index you want at any time. Therefore, a JS Array is actually more of a Map than an array. The only constraint it has is that the index _should_ be a non-negative integer. I am saying _should_ as opposed to _must_ because in typically JS fashion it will let you hang yourself since it lacks structure and constraints.
 
 Here is why this loose behavior is so bad, especially for people who aren't used to JS this is confusing:
 
@@ -24,7 +24,7 @@ arr["yourmom"] = "is nice";
 arr[-1] = -1;
 ```
 
-Now if we take each of those things we just put into the array (map?) and recall them we get the following:
+Now if we take each of those things we just put into the array and recall them we get the following:
 
 > This is formatted like the console output of Node.js
 
@@ -48,13 +48,11 @@ To complicate matters further, I was able to just add an arbitrary piece of text
 
 Touché... That is technically correct, but it doesn't take away from the fact this is completely confusing and encourages reckless programming patterns. After all, is this an **ARRAY** or an object that has elements of _array_-like behavior embedded into it? This is the equivalent of calling a double-mocha-caramel-macchiato-half-sweet-almond-milk-late coffee. No it fucking isn't, that's a goddamned desert with coffee flavoring. Don't piss on my leg and tell me it's raining.
 
-At this point you would think, "okay I have defeated the definition of an array here..."
+At this point you would think, "okay I have defeated the definition of an array here."
 
 > _evil guttural laughter ensues_
 
-This is where JS has decided to stick to its guns on the definition of their so called Array.
-
-Let me loop through my array now that I filled it with nonsense...
+This is where JS has decided to stick to its guns on the definition of their so called Array. Let me loop through my array now that I filled it with nonsense...
 
 ```JavaScript
 > arr.forEach((x) => {console.log(x);})
@@ -86,13 +84,13 @@ Frankly, at this point I would say this thing is a failure at being an Array. Le
    2. `yourmom` is a property
    3. the `-1` was changed to a string since it cannot be a self named property.
 
-I would not consider, "Oh this is just how JavaScript does it though..." an acceptable explanation. No! It's crap, no one should do it like this. Somewhat unpredictable and it has no guard rails like the rest of the language. There are plenty of JavaScript apologists out there that will explain this behavior, I don't care what the reason is, JS Arrays are poorly designed as far as I am concerned.
+I would not consider, "Oh this is just how JavaScript does it though. You're using it wrong..." an acceptable explanation. No! It's crap, no one should do it like this. Somewhat unpredictable and it has no guard rails like the rest of the language. There are plenty of JavaScript apologists out there that will explain this behavior, I don't care what the reason is, JS Arrays are poorly designed as far as I am concerned.
 
 ## Initializing arrays with capacity
 
 I want to start this section off by saying, **don't do this**. It's not worth the mind numbing problems that come with it. It's usually considered good practice to initialize your array's size if you know for a fact how large it's going to be. Well, JS doesn't think so.
 
-When you initialize an Array with a capacity in JS you get an array full of `undefined`. This is helpful to no one, but that's how it works. _Gee Thanks_
+When you initialize an Array with a capacity in JS you get an array full of `undefined`. This is helpful to no one, but that's how it works. _Gee Thanks_.
 
 To demonstrate how undesirable this is, here is a comparison between JS and C# on Arrays.
 
@@ -106,11 +104,11 @@ Initialization, Setting elements,
 | Setting elements | `arr[2] = 2;` |`arr[2] = 2;`| Setting index two to a value of two. |
 | Output | `[<2 empty items>, 2]` |`[0, 0, 2]`|JS's array contains `undefined` and `number`. Where as C# contains all `int`.|
 
-JS Arrays behave more like a C# [ArrayList](https://learn.microsoft.com/en-us/dotnet/api/system.collections.arraylist) which is a relic of the past. This is all that was available back in dot net 1 because generics didn't exist yet. Therefore, you had `ArrayList`s that had `null` and your struct/objects in it.
+JS Arrays behave more like a C# [ArrayList](https://learn.microsoft.com/en-us/dotnet/api/system.collections.arraylist) which is a relic of the past. This is all that was available back in dot net 1 because generics didn't exist yet. Therefore, you had `ArrayList`s which acted as a list of object where you could place your struct/objects in it mixed with `null` elements too.
 
-An argument can be made to use [Typed Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays), but it says right in the documentation these are not a replacement for normal Arrays. My biggest pet peeve here is that JS Arrays are not Arrays even though that's their name. As much as it pains me to say this, it's closer to a managed array since it does all that whacky stuff shown in the previous section. It's just annoying because a real managed array won't fill automatically fill your memory space with crap. In the C# example, it fills the memory with the type's default value which happens to be zero. If it were an array of `string` then it would be `null`, but that's because a `string`'s default value is `null`.
+An argument can be made to use [Typed Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Typed_arrays), but it says right in the documentation these are not a replacement for normal Arrays. Additionally, that will only constrain the value, not the index and the index is the problem. My biggest pet peeve here is that JS Arrays are not Arrays even though that's their literal name. As much as it pains me to say this, it's closer to a managed array since it does all that whacky stuff shown in the previous section. It's just annoying because a real managed array won't automatically fill your memory space with crap. In the C# `Array` example, it fills the memory with the type's default value which happens to be zero. If it were an array of `string` then it would be `null`, but that's because a `string`'s default value is `null`. These examples make sense.
 
-Again, JS arrays are confused, they don't know what they want to be.
+Again, JS arrays are confused, they don't know what they want to be. They are a barking cat or a dog that purrs.
 
 ## Adding elements to your Array
 
@@ -202,7 +200,7 @@ I see... so this too won't re-use the empty spots... Oh silly me, I should use [
 ]
 ```
 
-Excellent! Now the whole array is trashed... thanks! All the values were replaced by the number nine. There are overloads for the `fill()` function, but at this point - no thanks! JS Arrays has every function available except one for actually adding items to an array properly. It's amazing. Therefore, here is the real solution I have learned to properly add items to an array.
+Excellent! Now the whole array is trashed... thanks! All the values were replaced by the number nine. There are overloads for the `fill()` function, but at this point - no thanks! JS Arrays has every function available except one for actually adding items to an array properly. It's awe-inspiring. Therefore, here is the real solution I have learned to properly add items to an array.
 
 ```JavaScript
 //Do not specify capacity
@@ -215,8 +213,78 @@ for (var i = 0; i < 8; i++) {
 }
 ```
 
-This is managing the array unlike what JS does. Notice the lack of a function call? JS is increasing the size of the array on each loop, but we are consistently adding integers sequentially to the array. There are no gaps of undefined values, there are no surprise lengths, it's exactly what we set out to do.
+This is managing the array unlike what JS does. Did you notice the lack of a function call? JS is increasing the size of the array on each loop, but we are consistently adding integers sequentially to the array. There are no gaps of undefined values, there are no surprise lengths, it's exactly what we set out to do.
 
 The take away here is:
 
 > Do not use the `push()` function as if it is adding to the array unless you know for a fact your array was cleanly created.
+
+## Custom indexer
+
+It's weird that JavaScript clearly has indexer syntax, but it's not available to the programmer in a direct manner like it is in C#. You can see it being used on an array and the rest of objects to access properties or create new ones, but there is straight forward way to emulate this same behavior for a custom class. I looked into it and it's honestly not worth the hassle.
+
+In TypeScript you can only use indexer syntax on interfaces, this unfortunately excludes classes. Meaning a class cannot implement the interface which defeats the purpose.
+
+- <https://www.typescriptlang.org/docs/handbook/2/objects.html#index-signatures>
+- <https://stackoverflow.com/a/14851245/603807>
+
+This would be my desired TypeScript code:
+
+```TypeScript
+[index: number] : T {
+   return this._arr[index];
+}
+```
+
+It appears that in JavaScript it may be possible via what is called a Proxy...
+
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy>
+- <https://stackoverflow.com/a/49095109/603807>
+
+...but it looks like a tremendous pain in the ass to implement. Also, now instead of a class you implemented, you are handing control over to the Proxy object; all for the purposes of using an indexer? This will make user code disgusting, so no thank you.
+
+## slice() and splice()
+
+This is just another "wtf were you thinking" rant. JavaScript is well known for having atrocious naming. It's a theme if you will.
+
+> No one:
+> JS : How much can we confuse people?
+
+- [splice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
+- [slice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice)
+
+I guess the goal was to make using JS a riddle.
+
+_Splice_, **Slice**, _Slice_, **Splice** - those names are so similar it's hard to remember which does what unless you know where those terms originated.
+
+| Word   | Verb                                                              | JavaScript                                                               |
+| ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Slice  | To cut (something, especially food) into slices.                  | Makes a shallow copy of an existing array.                               |
+| Splice | To join or connect (a rope or ropes) by interweaving the strands. | Changes an array by removing, replacing or adding new elements in place. |
+
+A normal English speaker would assume by the verbiage chosen the following...
+
+- `slice()` will allow me to split an array into separate arrays.
+- `splice()` will allow me to join two arrays into one.
+
+...and yet no they don't. The verbs don't match the actions at all. Why?
+
+## Deleting elements
+
+Well if adding elements isn't straight forward, why the hell would deleting them be any easier? Not a shock at this point.
+
+[pop()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop) like its name implies, you are popping items off your stack. You push items onto the stack and therefore, you pop them off the stack. Forget that this supposed to be an array, it's a stack now. You can only pop off the last item, so as far as deletion goes, this is a loser.
+
+So as much as it hurts my soul, you should use the `splice()` function to get rid of elements like so:
+
+```JavaScript
+//Where i, is your desired index
+arr.splice(i, 1);
+```
+
+- I will not understand why `add` and `remove` were never achievable for JS.
+- Furthermore, I will never understand why all of the gymnastics were needed to make an array be anything but an array.
+
+## Conclusion
+
+These things are not arrays and I hate the nomenclature used to describe their actions.
