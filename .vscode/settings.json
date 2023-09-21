@@ -36,6 +36,8 @@
     "instanceof",
     "ComparableObject",
     "DumbObject",
-    "datetime"
+    "datetime",
+    "TKey",
+    "TValue"
   ]
 }
