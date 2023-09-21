@@ -19,7 +19,7 @@ export default class DumbObject {
     return this._someNumber === other.someNumber;
   }
 
-  //This is the psuedo-equivalent of not implementing getHashCode() like in C#
+  //This is the pseudo-equivalent of not implementing getHashCode() like in C#
   //In C# the memory location is returned normally for objects who don't have a getHashCode() implementation
   //Additionally, the HashCode the object is initialized with will not be altered even if the properties of the class are changed.
   //There is no way to do that in JS, so I am returning a random number instead.

@@ -3,6 +3,7 @@ import {
   defaultComparer,
   hasCompareToFunction,
   hasEqualsFunction,
+  isPrimitiveType,
 } from "../../../utils.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.array
@@ -12,12 +13,18 @@ import {
 export default class List<T> {
   private _arr: Array<T>;
   private _nextIndex: number;
+  private _isPrimitive: boolean = false;
+  private _equalityWarningIssued: boolean = false;
 
   public constructor(array: Array<T> = []) {
     this._arr = array;
 
     //If an array is provided with an initial capacity, then all of its elements will be `undefined` because JavaScript
     if (this.any() && this._arr.every(this.allUndefined)) {
+      console.warn(
+        "Array provided with all `undefined` elements. They will be overwritten."
+      );
+
       //In this case - overwrite everything starting at index 0
       this._nextIndex = 0;
     } else {
@@ -79,7 +86,7 @@ export default class List<T> {
     //Through the power of crackhead magic, this syntax functions as two things:
     //1. Store the supplied item at this index (overwrite).
     //2. Add a new element to the end of the array and increase the array's size by one
-    //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a queue.
+    //The Array object is not a true Array because it's mutable. It's just a poorly implemented list that sometimes wants to be a stack.
     //If this was done on a C# List<T>, even if there is Capacity, an `ArgumentOutOfRangeException` would be thrown.
     this._arr[this._nextIndex] = item;
 
@@ -103,9 +110,28 @@ export default class List<T> {
     this._nextIndex = 0;
   }
 
+  private warnAboutEquality(item: T): void {
+    //If a warning was already issued, don't do it again
+    if (this._equalityWarningIssued) return;
+
+    this._isPrimitive = isPrimitiveType(item);
+
+    this._equalityWarningIssued = true;
+
+    //If this is a primitive, no warning needed
+    if (this._isPrimitive) return;
+
+    //If this is not a primitive and the equality function was not found, then a warning needs to be issued once.
+    console.warn(
+      "Item of type T does not provide an `equals(T)` function. Default equality is being used."
+    );
+  }
+
   contains(item: T): boolean {
     if (hasEqualsFunction(item)) {
       return this.linearSearch(item).value !== undefined;
+    } else {
+      this.warnAboutEquality(item);
     }
 
     return this._arr.includes(item);
@@ -186,6 +212,8 @@ export default class List<T> {
   indexOf(item: T): number {
     if (hasEqualsFunction(item)) {
       return this.linearSearch(item).index;
+    } else {
+      this.warnAboutEquality(item);
     }
 
     return this._arr.indexOf(item);

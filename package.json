@@ -1,6 +1,6 @@
 {
   "name": "fjs",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A sensible C# inspired take on JavaScript's crappier nearly unusable stock objects.",
   "main": "dist/index",
   "types": "dist/index",
@@ -20,7 +20,7 @@
     "test0-comment": "Run specific test suites: https://jestjs.io/docs/cli#--runtestsbypath"
   },
   "author": "Eli Hayon",
-  "license": "ISC",
+  "license": "GPL-3.0 license",
   "devDependencies": {
     "@babel/cli": "^7.22.10",
     "@babel/core": "^7.22.11",
