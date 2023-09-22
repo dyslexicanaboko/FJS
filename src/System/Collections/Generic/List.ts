@@ -17,18 +17,29 @@ export default class List<T> {
   private _equalityWarningIssued: boolean = false;
 
   public constructor(array: Array<T> = []) {
-    this._arr = array;
+    this._arr = [];
+    this._nextIndex = 0;
 
-    //If an array is provided with an initial capacity, then all of its elements will be `undefined` because JavaScript
-    if (this.any() && this._arr.every(this.allUndefined)) {
-      console.warn(
-        "Array provided with all `undefined` elements. They will be overwritten."
-      );
+    //Edge Case: If an array is provided with an initial capacity, then all of its elements will be `undefined` because JavaScript
+    if (array.length > 0) {
+      let hasUndefined = false;
 
-      //In this case - overwrite everything starting at index 0
-      this._nextIndex = 0;
-    } else {
-      this._nextIndex = this.count;
+      //Check for undefined elements, if found skip adding them to the list
+      array.forEach((item) => {
+        if (item === undefined) {
+          hasUndefined = true;
+
+          return;
+        }
+
+        this.add(item);
+      });
+
+      if (hasUndefined) {
+        console.warn(
+          "Array provided with `undefined` elements. Those elements are being ignored."
+        );
+      }
     }
   }
 
