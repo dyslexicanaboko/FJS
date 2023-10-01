@@ -25,14 +25,19 @@ export const defaultComparer = <T>(left: T, right: T): number => {
 };
 
 export const defaultEquals = (left: any, right: any): boolean => {
-  //If both are undefined then left = right
-  if (!left && !right) return true;
+  //Using explicit long compare because the short hand is not working
+  //const num = 0;  will yield true when testing `!num`
+  //const arr = []; will yield false when testing `!arr`
+  //Not helpful JavaScript...
 
-  //If left is undefined then left < right
-  if (!left) return false;
+  //If both are undefined then for all intents and purposes they are equal
+  if (left === undefined && right === undefined) return true;
 
-  //If right is undefined then left > right
-  if (!right) return false;
+  //If left is undefined then not equal
+  if (left === undefined) return false;
+
+  //If right is undefined then not equal
+  if (right === undefined) return false;
 
   //If neither is undefined, then do a proper compare
   return left.equals(right);

@@ -17,6 +17,7 @@
     "test-dictP": "tsc -d && jest --runTestsByPath tests/DictPrimitive.test.ts",
     "test-dictC": "tsc -d && jest --runTestsByPath tests/DictComplex.test.ts",
     "test-dictD": "tsc -d && jest --runTestsByPath tests/DictDumb.test.ts",
+    "test-hash": "tsc -d && jest --runTestsByPath tests/Hashing.test.ts",
     "test0-comment": "Run specific test suites: https://jestjs.io/docs/cli#--runtestsbypath"
   },
   "author": "Eli Hayon",
