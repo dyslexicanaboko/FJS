@@ -17,24 +17,33 @@ export default class List<T> {
   private _equalityWarningIssued: boolean = false;
 
   public constructor(array: Array<T> = []) {
-    this._arr = array;
+    this._arr = [];
+    this._nextIndex = 0;
 
-    //If an array is provided with an initial capacity, then all of its elements will be `undefined` because JavaScript
-    if (this.any() && this._arr.every(this.allUndefined)) {
-      console.warn(
-        "Array provided with all `undefined` elements. They will be overwritten."
-      );
+    //Edge Case: If an array is provided with an initial capacity, then all of its elements will be `undefined` because JavaScript
+    if (array.length > 0) {
+      let hasUndefined = false;
 
-      //In this case - overwrite everything starting at index 0
-      this._nextIndex = 0;
-    } else {
-      this._nextIndex = this.count;
+      //Check for undefined elements, if found skip adding them to the list
+      array.forEach((item) => {
+        if (item === undefined) {
+          hasUndefined = true;
+
+          return;
+        }
+
+        this.add(item);
+      });
+
+      if (hasUndefined) {
+        console.warn(
+          "Array provided with `undefined` elements. Those elements are being ignored."
+        );
+      }
     }
   }
 
   //I am going to use an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
-  //TODO: I ran into a problem where the array did not have a zero index. I think raising an error
-  //is the best option at the moment.
   private linearSearch(item: any): ElementType<T> {
     for (let i = 0; i < this.count; i++) {
       const found = this._arr[i];
@@ -48,13 +57,6 @@ export default class List<T> {
   private allUndefined(element: T): boolean {
     return element === undefined;
   }
-
-  //Keeping this for now because I might need it later
-  // private isNull(item: any): void {
-  //   if (item === null || item === undefined) {
-  //     throw new Error("Object cannot be null or undefined.");
-  //   }
-  // }
 
   //This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function in JavaScript
   //So for now, unless I change my mind, these are staying inside the class.
@@ -312,7 +314,7 @@ export default class List<T> {
     }
 
     //Otherwise, Plan B. attempt to use `IComparable<T>` from item of type T
-    //Pull any surrogate item to test with, hopefully it's not undefined (WIP)
+    //Pull any surrogate item to test with
     let item = this.get(0);
 
     if (item) {

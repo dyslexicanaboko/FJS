@@ -344,3 +344,17 @@ test("Given non-empty list of unordered items, When sorting the list using defau
 
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
+
+test("Given array of items with some undefined elements, When initializing the list, Then the list will ignore undefined elements", () => {
+  const jankyJsArray = new Array<number>(3); //Three undefined elements
+  //Three numbers
+  jankyJsArray.push(1);
+  jankyJsArray.push(2);
+  jankyJsArray.push(3);
+
+  const actual = new List<number>(jankyJsArray);
+  const expected = getArray(3);
+
+  expect(actual.count).toBe(3);
+  expect(assertAreEqual(actual, expected)).toBe(true);
+});

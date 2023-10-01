@@ -1,5 +1,9 @@
 import DateTime from "./System/DateTime.js";
 
+//Keeping this for now because I might need it later
+export const isNull = (item: any): boolean =>
+  item === null || item === undefined;
+
 //Is left -1 <, 1 >, 0 = then right
 export const defaultComparer = <T>(left: T, right: T): number => {
   //If both are undefined then left = right
