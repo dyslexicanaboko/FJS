@@ -1,7 +1,7 @@
 import IObject from "../System/IObject.js";
 import IEquatable from "../System/IEquatable.js";
 import IComparable from "../System/IComparable.js";
-import { getHashCodeForNumber } from "../utils.js";
+import { isNull, getHashCodeForNumber } from "../utils.js";
 
 export default class ComparableObject
   implements
@@ -28,7 +28,7 @@ export default class ComparableObject
   //Since JavaScript does not have operator overloading then we must use methods
   equals(other: ComparableObject) {
     //If other is undefined or null then return true
-    if (other === undefined || other === null) return true;
+    if (isNull(other)) return true;
 
     //If other is the same instance then return true
     if (this === other) return true;
@@ -52,15 +52,9 @@ export default class ComparableObject
 
   compareTo(other: ComparableObject): number {
     //If both are undefined then this = other
-    if (!this && !other) return 0;
+    if (isNull(other)) return 1;
 
-    //If this is undefined then this < other
-    if (!this) return -1;
-
-    //If other is undefined then this > other
-    if (!other) return 1;
-
-    //If neither is undefined, then do a proper compare
+    //If other is not undefined, then do a proper compare
     if (this.someNumber < other.someNumber) return -1;
 
     if (this.someNumber === other.someNumber) return 0;
