@@ -29,7 +29,7 @@ export default class Dictionary<TKey, TValue> {
 
   public constructor();
   public constructor(map: Map<TKey, TValue>);
-  public constructor(map: undefined, compare: IEqualityComparer<TKey>);
+  public constructor(map: Map<TKey, TValue>, compare: IEqualityComparer<TKey>);
   public constructor(
     map?: Map<TKey, TValue>,
     compare?: IEqualityComparer<TKey> | undefined
