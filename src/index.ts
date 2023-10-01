@@ -3,7 +3,7 @@
 import DateTime from "./System/DateTime.js";
 import ComparableObject from "./Entities/ComparableObject.js";
 import Dictionary from "./System/Collections/Generic/Dictionary.js";
-import { getHashCodeForAny, getHashCodeForDateTime } from "./utils.js";
+import * as u from "./utils.js";
 
 /*
   Permanent tests need to be put into Jest
@@ -33,7 +33,9 @@ const getDictionary = (
 ): Dictionary<ComparableObject, ComparableObject> =>
   new Dictionary<ComparableObject, ComparableObject>(getMap(size));
 
-getDictionary(10);
+//getDictionary(10);
+
+console.log(u.defaultEquals(n(0), n(0)));
 
 // console.log("number", getHashCodeForAny(10));
 // console.log("boolean", getHashCodeForAny(true));
