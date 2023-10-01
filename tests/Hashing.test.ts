@@ -99,3 +99,99 @@ test.each([
 test("isPrimitiveType - Given any value, When it is a custom class, Then false is returned", () => {
   expect(u.isPrimitiveType(one)).toBe(false);
 });
+
+test("getHashCodeRandom - Given a random hashcode, When it is random, Then the hash is not zero and cannot be predicted", () => {
+  expect(u.getHashCodeRandom()).not.toEqual(0);
+});
+
+test("getHashCodeForBoolean - Given a boolean, When it is false, Then 0 is the hash", () => {
+  expect(u.getHashCodeForBoolean(false)).toBe(0);
+});
+
+test("getHashCodeForBoolean - Given a boolean, When it is true, Then 1 is the hash", () => {
+  expect(u.getHashCodeForBoolean(true)).toBe(1);
+});
+
+test("getHashCodeForNumber - Given a number, When it is a number, Then that same number is returned as the hash", () => {
+  expect(u.getHashCodeForNumber(1)).toBe(1);
+});
+
+test("getHashCodeForBigInt - Given a big integer, When it is a big integer, Then that same big integer is returned as the hash", () => {
+  expect(u.getHashCodeForBigInt(1n)).toBe(1);
+});
+
+//In theory they shouldn't be predictable. The C# implementation actually makes sure of this because they
+//don't want anyone to use the Hash as a primary key or some significant identifier.
+test.each([
+  ["a", 372029373],
+  ["A", 372029405],
+  ["b", 372029376],
+  ["B", 372029408],
+  ["c", 372029375],
+  ["C", 372029407],
+  ["d", 372029370],
+  ["D", 372029402],
+  ["e", 372029369],
+  ["E", 372029401],
+  ["f", 372029372],
+  ["F", 372029404],
+  ["g", 372029371],
+  ["G", 372029403],
+  ["h", 372029382],
+  ["H", 372029414],
+  ["i", 372029381],
+  ["I", 372029413],
+  ["j", 372029384],
+  ["J", 372029416],
+  ["k", 372029383],
+  ["K", 372029415],
+  ["l", 372029378],
+  ["L", 372029410],
+  ["m", 372029377],
+  ["M", 372029409],
+  ["n", 372029380],
+  ["N", 372029412],
+  ["o", 372029379],
+  ["O", 372029411],
+  ["p", 372029390],
+  ["P", 372029422],
+  ["q", 372029389],
+  ["Q", 372029421],
+  ["r", 372029392],
+  ["R", 372029424],
+  ["s", 372029391],
+  ["S", 372029423],
+  ["t", 372029386],
+  ["T", 372029418],
+  ["u", 372029385],
+  ["U", 372029417],
+  ["v", 372029388],
+  ["V", 372029420],
+  ["w", 372029387],
+  ["W", 372029419],
+  ["x", 372029398],
+  ["X", 372029430],
+  ["y", 372029397],
+  ["Y", 372029429],
+  ["z", 372029400],
+  ["Z", 372029432],
+])(
+  "getHashCodeForString - Testing lowercase and uppercase letters to have predictable hashes",
+  (letter, hash) => {
+    expect(u.getHashCodeForString(letter)).toBe(hash);
+  }
+);
+
+test.each([
+  ["0001-01-01", 304934780], //0 in C#
+  ["2000-12-01", 671224035], //-1065047744 in C#
+  ["3000-01-01", -632488561], //1602339637 in C#
+])(
+  "getHashCodeForDate - Testing JS-Date AND DateTime to have predictable hashes",
+  (dateString, hash) => {
+    const date = new Date(dateString);
+
+    expect(u.getHashCodeForDate(date)).toBe(hash);
+    expect(u.getHashCodeForDateTime(new DateTime(date))).toBe(hash);
+  }
+);

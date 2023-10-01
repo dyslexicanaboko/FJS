@@ -7,13 +7,13 @@ export const isNull = (item: any): boolean =>
 //Is left -1 <, 1 >, 0 = then right
 export const defaultComparer = <T>(left: T, right: T): number => {
   //If both are undefined then left = right
-  if (!left && !right) return 0;
+  if (isNull(left) && isNull(right)) return 0;
 
   //If left is undefined then left < right
-  if (!left) return -1;
+  if (isNull(left)) return -1;
 
   //If right is undefined then left > right
-  if (!right) return 1;
+  if (isNull(right)) return 1;
 
   //If neither is undefined, then do a proper compare
   if (left < right) return -1;
@@ -31,13 +31,13 @@ export const defaultEquals = (left: any, right: any): boolean => {
   //Not helpful JavaScript...
 
   //If both are undefined then for all intents and purposes they are equal
-  if (left === undefined && right === undefined) return true;
+  if (isNull(left) && isNull(right)) return true;
 
   //If left is undefined then not equal
-  if (left === undefined) return false;
+  if (isNull(left)) return false;
 
   //If right is undefined then not equal
-  if (right === undefined) return false;
+  if (isNull(right)) return false;
 
   //If neither is undefined, then do a proper compare
   return left.equals(right);
