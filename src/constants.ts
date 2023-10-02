@@ -5,3 +5,5 @@ export const SecondsInOneMinute: number = 60.0;
 export const MillisecondsInOneSecond: number = 1000.0;
 export const FirstDayOfTheMonth: number = 1;
 export const GreatestCommonDayOfMonth: number = 27;
+export const EmptyGuidString = "00000000-0000-0000-0000-000000000000";
+export const GuidWrapperCharacters: string[] = ["{", "}", "(", ")"];

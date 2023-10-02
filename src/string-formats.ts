@@ -87,3 +87,9 @@ export const formatCurrency = (amount: number): string =>
 
 export const formatPercent = (ratio: number): string =>
   percentFormat.format(ratio);
+
+const guidPattern =
+  /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i;
+
+export const isValidGuidString = (guid: string): boolean =>
+  guidPattern.test(guid);
