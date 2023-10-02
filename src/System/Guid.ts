@@ -3,7 +3,7 @@ import IObject from "./IObject.js";
 import crypto from "crypto";
 import { EmptyGuidString, GuidWrapperCharacters } from "../constants.js";
 import { isValidGuidString } from "../string-formats.js";
-import { getHashCodeForString, isNull } from "../utils.js";
+import { getHashCodeForString } from "../utils.js";
 
 //https://learn.microsoft.com/en-us/dotnet/api/system.guid
 //https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
@@ -25,7 +25,7 @@ export default class Guid implements IObject<Guid>, IEquatable<Guid> {
         "String must be in the globally recognized 8/4/4/4/12 hex digit format: 00000000-0000-0000-0000-000000000000."
       );
 
-    this._value = guidString;
+    this._value = guidString.toLowerCase();
   }
 
   public static newGuid(): Guid {
