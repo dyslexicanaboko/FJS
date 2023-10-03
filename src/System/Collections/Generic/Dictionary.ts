@@ -9,10 +9,13 @@ import IEqualityComparer from "./IEqualityComparer.js";
 import KeyValuePair from "./KeyValuePair.js";
 import { ComparerMode } from "../ElementType.js";
 
-//https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+/**
+ * JavaScript implementation of the C# Dictionary<TKey, TValue> class.
+ * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+ */
 export default class Dictionary<TKey, TValue> {
   //number is the hashed TKey code
   //KeyValuePair is the TKey and TValue pair to be stored
@@ -27,8 +30,18 @@ export default class Dictionary<TKey, TValue> {
     right: TValue | undefined
   ) => boolean;
 
+  /**
+   * @constructor
+   * Initialize an empty dictionary */
   public constructor();
+  /**
+   * @constructor
+   * @param {Map<TKey, TValue>} map - Initialize a dictionary using an existing `Map` to copy from. */
   public constructor(map: Map<TKey, TValue>);
+  /**
+   * @constructor
+   * @param {Map<TKey, TValue>} map - Initialize a dictionary using an existing `Map` to copy from.
+   * @param {IEqualityComparer<TKey>} compare - Optional comparer for performing equality comparisons on the {TKey}*/
   public constructor(map: Map<TKey, TValue>, compare: IEqualityComparer<TKey>);
   public constructor(
     map?: Map<TKey, TValue>,

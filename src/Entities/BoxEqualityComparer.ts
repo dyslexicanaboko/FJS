@@ -1,11 +1,13 @@
-//I am shamelessly copying the example from the documentation
-//https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.iequalitycomparer-1
-//https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1
-
 import IEqualityComparer from "../System/Collections/Generic/IEqualityComparer.js";
 import { getHashCodeForNumber } from "../utils.js";
 import BoxObject from "./BoxObject.js";
 
+/**
+ * This class is used to compare two BoxObject instances.
+ * I am shamelessly copying the example from the documentation
+ * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.iequalitycomparer-1
+ * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1
+ */
 export default class BoxEqualityComparer
   implements IEqualityComparer<BoxObject>
 {

@@ -6,10 +6,13 @@ import {
   isPrimitiveType,
 } from "../../../utils.js";
 
-//https://learn.microsoft.com/en-us/dotnet/api/system.array
-//https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-//https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays
+/**
+ * Modeled after .NET's List<T> class
+ * https://learn.microsoft.com/en-us/dotnet/api/system.array
+ * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+ * https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays
+ */
 export default class List<T> {
   private _arr: Array<T>;
   private _nextIndex: number;
