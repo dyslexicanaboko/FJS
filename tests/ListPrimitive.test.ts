@@ -156,10 +156,8 @@ test("Given non-empty list, When getting a range of elements inside the list, Th
   expect(assertAreEqual(actual, expected)).toBe(true);
 });
 
-test("Given non-empty list, When getting a range of elements outside the list, Then an empty list is returned", () => {
-  const actual = _ten.getRange(10, 3);
-
-  expect(actual.any()).toBe(false);
+test("Given non-empty list, When getting a range of elements outside the list, Then an error is raised", () => {
+  expect(() => _ten.getRange(10, 3)).toThrow();
 });
 
 test("Given non-empty list, When finding index of item by item the list does contains, Then index is returned", () => {
@@ -306,6 +304,14 @@ test("Given non-empty list, When removing a range of items by out of bound index
 
   expect(() => {
     actual.removeRange(10, 1);
+  }).toThrow();
+});
+
+test("Given non-empty list, When removing a range of items by out of bounds count, Then an error is raised", () => {
+  const actual = new List<number>([1, 3]);
+
+  expect(() => {
+    actual.removeRange(0, 3);
   }).toThrow();
 });
 

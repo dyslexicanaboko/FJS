@@ -6,10 +6,15 @@ import {
   isPrimitiveType,
 } from "../../../utils.js";
 
-//https://learn.microsoft.com/en-us/dotnet/api/system.array
-//https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-//https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays
+/**
+ * Modeled after .NET's List<T> class
+ * https://learn.microsoft.com/en-us/dotnet/api/system.array
+ * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+ * https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays
+ *
+ * @class List<T>
+ */
 export default class List<T> {
   private _arr: Array<T>;
   private _nextIndex: number;
@@ -43,7 +48,11 @@ export default class List<T> {
     }
   }
 
-  //I am going to use an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
+  /**
+   * Using an O(n) linear search for now. I am not sure if I can improve it in JavaScript.
+   * @param {any} item - Item that has an `equals(T)` function implemented
+   * @returns {ElementType<T>} The matching value and index or default if not found
+   */
   private linearSearch(item: any): ElementType<T> {
     for (let i = 0; i < this.count; i++) {
       const found = this._arr[i];
@@ -54,16 +63,30 @@ export default class List<T> {
     return { index: -1, value: undefined };
   }
 
+  /**
+   * Predicate function to check if every element is undefined.
+   * @param {T} element - Element to check
+   * @returns {boolean} True if the element is undefined, false otherwise
+   */
   private allUndefined(element: T): boolean {
     return element === undefined;
   }
 
-  //This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function in JavaScript
-  //So for now, unless I change my mind, these are staying inside the class.
+  //This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function
+  //in JavaScript.
+  /**
+   * Test if the list contains any elements.
+   * @returns {boolean} True if the list has at least one element, false otherwise
+   */
   any(): boolean {
     return this.count > 0;
   }
 
+  /**
+   * Provides a true count of the number of elements {T} in the list.
+   * Does not behave like the `length` property of a JS array.
+   * @returns {number} The number of elements in the list
+   */
   get count(): number {
     return this._arr.length;
   }
@@ -84,6 +107,11 @@ export default class List<T> {
    * JavaScript does not have a true add function, therefore you must overwrite items by index.
    * Here is a lot of banter about setting the capacity of an array:
    * https://stackoverflow.com/questions/4852017/how-to-initialize-an-arrays-length-in-javascript */
+
+  /**
+   * Adds an item to the list at the next available index.
+   * @param item - Item to add to the list
+   */
   add(item: T): void {
     //Through the power of crackhead magic, this syntax functions as two things:
     //1. Store the supplied item at this index (overwrite).
@@ -95,12 +123,19 @@ export default class List<T> {
     this._nextIndex++;
   }
 
+  /**
+   * Add a range of items to the list
+   * @param items - Items to add to the list
+   */
   addRange(items: Array<T>): void {
     items.forEach((item) => {
       this.add(item);
     });
   }
 
+  /**
+   * Remove all items from the list.
+   */
   clear(): void {
     const count = this.count;
 
@@ -112,6 +147,14 @@ export default class List<T> {
     this._nextIndex = 0;
   }
 
+  /**
+   * Check if the current item type T is a primitive type. If it is a primitive type
+   * then the designated default equality will be used. It is a non-primitive type T
+   * then the type T must implement IEquatable<T> and provide an `equals(T)` function.
+   * If the function is not found then a warning is raised to let the user know they
+   * are using the default equality.
+   * @param item - Item to test
+   */
   private warnAboutEquality(item: T): void {
     //If a warning was already issued, don't do it again
     if (this._equalityWarningIssued) return;
@@ -129,6 +172,11 @@ export default class List<T> {
     );
   }
 
+  /**
+   * Check if the provided item is contained in the list.
+   * @param item
+   * @returns Whether or not the item is contained in the list.
+   */
   contains(item: T): boolean {
     if (hasEqualsFunction(item)) {
       return this.linearSearch(item).value !== undefined;
@@ -139,6 +187,10 @@ export default class List<T> {
     return this._arr.includes(item);
   }
 
+  /**
+   * Copy all the items of the list to the provided array.
+   * @param array - Initialized array to copy the items to.
+   */
   copyTo(array: Array<T>): void {
     array.push(...this._arr);
   }
@@ -147,6 +199,10 @@ export default class List<T> {
   //Conscious decision to return another List<T> instead of IEnumerable<T> because that's a whole other can of worms.
   //I could return an Array, but I don't see the point if it's going to be turned right back into a List potentially.
   //There is the `toArray()` function if anything.
+  /**
+   * Returns a new list with all the distinct elements of the current list.
+   * @returns {List<T>} A new list with all the distinct elements of the current list.
+   */
   distinct(): List<T> {
     const lst = new List<T>();
 
@@ -160,22 +216,46 @@ export default class List<T> {
     return lst;
   }
 
+  /**
+   * Test if any item exists in the list.
+   * @param predicate test to perform on each element.
+   * @returns Whether or not the item exists in the list.
+   */
   exists(predicate: (item: T) => boolean): boolean {
     return this._arr.some(predicate);
   }
 
+  /**
+   * Find and return an item in the list.
+   * @param predicate search to perform.
+   * @returns first item that matches the search criteria or undefined if it is not found.
+   */
   find(predicate: (item: T) => boolean): T | undefined {
     return this._arr.find(predicate);
   }
 
+  /**
+   * Find and return a list of items from the list.
+   * @param predicate search to perform.
+   * @returns the items that matche the search criteria or an empty list if nothing is found.
+   */
   findAll(predicate: (item: T) => boolean): List<T> {
     return new List<T>(this._arr.filter(predicate));
   }
 
+  /**
+   * Find and return the index of an item in the list.
+   * @param predicate search to perform.
+   * @returns first index that matches the search criteria or -1 if it is not found.
+   */
   findIndex(predicate: (item: T) => boolean): number {
     return this._arr.findIndex(predicate);
   }
 
+  /**
+   * An action to perform on each element in the list.
+   * @param action action to perform on each element.
+   */
   forEach(action: (item: T) => void): void {
     this._arr.forEach((x) => {
       action(x);
@@ -198,19 +278,41 @@ export default class List<T> {
    * https://github.com/ayonli/indexable  //Looks more complicated than it's worth
    * */
   //This is a compromise for there not being user accessible indexers in TypeScript/JavaScript SDK
+  /**
+   * Get an item from the list using its index.
+   * @param index index of the desired item.
+   * @returns the item at the specified index.
+   */
   get(index: number): T {
+    this.isInBounds(index);
+
     //Might want to use at(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at
     return this._arr[index];
   }
 
+  /**
+   * Get a range of items starting at the specified index and ending at the provided offset.
+   * @param index starting index.
+   * @param count offset from index.
+   * @returns a new list with the range of items.
+   */
   getRange(index: number, count: number): List<T> {
+    this.isInBounds(index);
+
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
     //Slice uses start and end indices therefore this has to be accounted for like so:
     const end = index + count;
 
+    this.isInBounds(end);
+
     return new List<T>(this._arr.slice(index, end));
   }
 
+  /**
+   * Get the index of the first occurrence of an item in the list.
+   * @param item item to search for.
+   * @returns index of the first occurrence of the item or -1 if it is not found.
+   */
   indexOf(item: T): number {
     if (hasEqualsFunction(item)) {
       return this.linearSearch(item).index;
@@ -221,6 +323,11 @@ export default class List<T> {
     return this._arr.indexOf(item);
   }
 
+  /**
+   * Make sure the index is within the bounds of the list. If not and error is raised if
+   * the index is less than zero or the count if the index is greater than the count.
+   * @param index index to test.
+   */
   private isInBounds(index: number): void {
     if (index < 0) {
       throw new Error("Index must be greater than or equal to zero.");
@@ -231,6 +338,11 @@ export default class List<T> {
     }
   }
 
+  /**
+   * Insert an item at the specified index.
+   * @param index index to inser the item at.
+   * @param item the item to insert.
+   */
   insert(index: number, item: T): void {
     this.isInBounds(index);
 
@@ -242,6 +354,11 @@ export default class List<T> {
     this._nextIndex++;
   }
 
+  /**
+   * Insert a range of items at the specified index.
+   * @param index index to insert the items at.
+   * @param items the items to insert.
+   */
   insertRange(index: number, items: T[]): void {
     this.isInBounds(index);
 
@@ -250,6 +367,11 @@ export default class List<T> {
     this._nextIndex = this.count;
   }
 
+  /**
+   * Item to remove if found.
+   * @param item item to remove.
+   * @returns true if the item was found and removed, false if the item was not found.
+   */
   remove(item: T): boolean {
     const i = this.indexOf(item);
 
@@ -266,6 +388,11 @@ export default class List<T> {
     return false;
   }
 
+  /**
+   * Remove all items that match the search criteria.
+   * @param predicate search criteria.
+   * @returns the number of items removed. If nothing was found, then zero is returned.
+   */
   removeAll(predicate: (item: T) => boolean): number {
     var found = this.findAll(predicate);
 
@@ -283,6 +410,10 @@ export default class List<T> {
     return c;
   }
 
+  /**
+   * Remove an item at the specified index.
+   * @param index the index of the item to remove.
+   */
   removeAt(index: number): void {
     this.isInBounds(index);
 
@@ -291,18 +422,31 @@ export default class List<T> {
     this._nextIndex--;
   }
 
+  /**
+   * Remove a range of items starting at the specified index and ending at the provided offset.
+   * @param index beginning index.
+   * @param count offset from index.
+   */
   removeRange(index: number, count: number): void {
     this.isInBounds(index);
+    this.isInBounds(index + count);
 
     this._arr.splice(index, count);
 
     this._nextIndex = this.count;
   }
 
+  /**
+   * Reverse the order of the items in the list.
+   */
   reverse(): void {
     this._arr.reverse();
   }
 
+  /**
+   * Sort the items in the list using the provided comparison function.
+   * @param comparison criteria to sort the list by.
+   */
   sort(comparison?: (left: T, right: T) => number): void {
     if (!this.any()) return;
 
@@ -336,6 +480,10 @@ export default class List<T> {
   }
 
   //Can be used to access the indexer too, which is not sexy
+  /**
+   * Return the List as an Array.
+   * @returns Array of T
+   */
   toArray(): Array<T> {
     return this._arr;
   }
@@ -352,6 +500,9 @@ export default class List<T> {
    * already does this where it doesn't allow for undefined unless explicitly allowed. This is the same idea as nullable
    * reference types. Like a nullable string. */
   //https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.trimexcess
+  /**
+   * Will purge all undefined elements from the list.
+   */
   trimExcess(): void {
     //If the array is empty, then there is no excess capacity to trim
     if (!this.any()) return;

@@ -1,3 +1,6 @@
+/**
+ * Generic constants.
+ */
 export const HoursInOneDay: number = 24.0;
 export const SecondsInOneDay: number = 86400.0;
 export const SecondsInOneHour: number = 3600.0;
