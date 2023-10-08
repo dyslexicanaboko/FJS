@@ -12,6 +12,12 @@ import BoxObject from "./BoxObject.js";
 export default class BoxEqualityComparer
   implements IEqualityComparer<BoxObject>
 {
+  /**
+   * Compare two BoxObject instances.
+   * @param left left BoxObject.
+   * @param right right BoxObject.
+   * @returns true if they are equal, false if they are different.
+   */
   public equals(
     left: BoxObject | undefined,
     right: BoxObject | undefined
@@ -27,6 +33,11 @@ export default class BoxEqualityComparer
     );
   }
 
+  /**
+   * Get the hash code for a BoxObject instance.
+   * @param obj BoxObject instance.
+   * @returns hash code.
+   */
   public getHashCode(obj: BoxObject): number {
     const hCode = obj.height ^ obj.length ^ obj.width;
 

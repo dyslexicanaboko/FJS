@@ -1,10 +1,20 @@
 import DateTime from "./System/DateTime.js";
+import Guid from "./System/Guid.js";
 
-//Keeping this for now because I might need it later
+/**
+ * Testing if an item is null or undefined.
+ * @param item any object.
+ * @returns true if it is null or undefined, false if it is not.
+ */
 export const isNull = (item: any): boolean =>
   item === null || item === undefined;
 
-//Is left -1 <, 1 >, 0 = then right
+/**
+ * Default object comparison function between left and right instances.
+ * @param left left type T instance
+ * @param right right type T instance
+ * @returns Negative one if left is less than right. Zero if left and right are equal. One if left is greater than right.
+ */
 export const defaultComparer = <T>(left: T, right: T): number => {
   //If both are undefined then left = right
   if (isNull(left) && isNull(right)) return 0;
@@ -24,6 +34,15 @@ export const defaultComparer = <T>(left: T, right: T): number => {
   return 1;
 };
 
+/**
+ * Default object equality function between left and right instances.
+ * If both instances are null or undefined, then they are equal.
+ * If one instance is null or undefined, then they are not equal.
+ * Lastly, use the equals function provided by the left instance.
+ * @param left left type T instance
+ * @param right right type T instance
+ * @returns true if they are equal, false if they are different.
+ */
 export const defaultEquals = (left: any, right: any): boolean => {
   //Using explicit long compare because the short hand is not working
   //const num = 0;  will yield true when testing `!num`
@@ -55,28 +74,59 @@ export const defaultEquals = (left: any, right: any): boolean => {
  * Therefore, I am using the old hacky JavaScript way of testing incoming objects as though
  * they are anonymous to gain lee way. I hope TypeScript improves this in the future. */
 //Native to System.Object as Equals(object other), but also as IEquatable<T> as Equals(T other)
+/**
+ * Check if the provided object has an equals function.
+ * @param target object to test.
+ * @returns true if the object has an equals function, false if it does not.
+ */
 export const hasEqualsFunction = (target: any): boolean => {
   return typeof target.equals === "function";
 };
 
 //IComparable<T>
+/**
+ * Check if the provided object has a compareTo function.
+ * @param target object to test.
+ * @returns true if the object has a compareTo function, false if it does not.
+ */
 export const hasCompareToFunction = (target: any): boolean => {
   return typeof target.compareTo === "function";
 };
 
 //Native to System.Object as GetHashCode()
+/**
+ * Check if the provided object has a getHashCode function.
+ * @param target object to test.
+ * @returns true if the object has a getHashCode function, false if it does not.
+ */
 export const hasGetHashCodeFunction = (target: any): boolean => {
   return typeof target.getHashCode === "function";
 };
 
+/**
+ * Generate hash code for a number.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForNumber = (target: number): number => target;
 
+/**
+ * Generate hash code for a boolean.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForBoolean = (target: boolean): number =>
   target ? 1 : 0;
 
 //https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/string.cs#L833
 //This is an adaptation of the C# algorithm. They cannot syntactically be the same because
 //JavaScript doesn't have user accessible pointers
+/**
+ * Generate hash code for a string. This is an adaptation of the C# algorithm.
+ * https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/string.cs#L833
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForString = (target: string): number => {
   let hash1 = 5381;
   let hash2 = hash1;
@@ -105,6 +155,12 @@ export const getHashCodeForString = (target: string): number => {
   return hash1 + Math.imul(hash2, 1566083941);
 };
 
+/**
+ * Generate hash code for a BigInt. If an error occurs then a random hash code is returned.
+ * A console warning will be issued if this happens.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForBigInt = (target: bigint): number => {
   try {
     //This is probably a bad idea, hence the try/catch
@@ -119,16 +175,32 @@ export const getHashCodeForBigInt = (target: bigint): number => {
 };
 
 //DateTime is encapsulating a JS Date object, so it is going to use the same hashing algorithm
+/**
+ * Generate hash code for a DateTime. Based off of C#'s DateTime hashing algorithm.
+ * https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/datetime.cs#L979
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForDateTime = (target: DateTime): number =>
   getHashCodeForTotalMilliseconds(target.totalMilliseconds);
 
 //As stated before - there are no Ticks in JavaScript, so total milliseconds is as precise as it gets
+/**
+ * Generate hash code for a Date. Functionally equivalent to DateTime's getHashCodeForDateTime.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForDate = (target: Date): number =>
   getHashCodeForTotalMilliseconds(target.getTime());
 
 //https://github.com/Microsoft/referencesource/blob/master/mscorlib/system/datetime.cs#L979
 //This will not be one to one with the C# algorithm because JavaScript doesn't support the concept of ticks.
 //Frankly it probably can, but I am not going to kill myself to get that to work.
+/**
+ * Generate hash code for a milliseconds. Driver for Date and DateTime.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 const getHashCodeForTotalMilliseconds = (kindOfLikeTicks: number): number => {
   //Int64 ticks = InternalTicks;
   //return unchecked((int)ticks) ^ (int)(ticks >> 32);
@@ -140,7 +212,12 @@ const getHashCodeForTotalMilliseconds = (kindOfLikeTicks: number): number => {
   return kindOfLikeTicks ^ parseInt(shift.toString());
 };
 
-//It's better to not use this function if you know what the type is already
+/**
+ * Generate hash code for a any type. It's better to not use this function if you know what the type is already.
+ * This is a catch all for any type that does not implement the getHashCode function and it will be inefficient.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const getHashCodeForAny = (target: any): number => {
   //The if statements are ordered by most likely to least likely
   if (typeof target === "number") return getHashCodeForNumber(target);
@@ -161,6 +238,11 @@ export const getHashCodeForAny = (target: any): number => {
   return getHashCodeRandom();
 };
 
+/**
+ * Get the character codes for a string.
+ * @param str target string.
+ * @returns array of character codes.
+ */
 const getCharCodes = (str: string): number[] => {
   const charCodes: number[] = [];
 
@@ -171,7 +253,14 @@ const getCharCodes = (str: string): number[] => {
   return charCodes;
 };
 
-//If you are using this, you are doing it wrong unless it's for demonstrations or you have not implemented the getHashCode function yet.
+/**
+ * Generate a meaningless crappy random number as a hash code. If you are using this, you are doing it wrong unless it's for
+ * demonstrations or you have not implemented the getHashCode function yet. This is an implementation that mimics what
+ * C# does when you don't implement the GetHashCode method. Instead C# uses the memory location of the object. Once the
+ * hash code is set, it will not change regardless of how that object is mutated.
+ * @param target the instance to get the random hash code for.
+ * @returns random hash code.
+ */
 export const getHashCodeRandom = (): number => {
   //Hashcodes can be negative sometimes, so sure why not
   const polarity = (Math.random() * 100000) % 2 === 0 ? 1 : -1;
@@ -180,6 +269,15 @@ export const getHashCodeRandom = (): number => {
   return polarity * Math.round(Math.random() * 100000000000);
 };
 
+//TODO: Should I have a separate function to just check established types? Essentially, types that are known to implement the getHashCode function?
+/**
+ * Determine if the provided object is a primitive type. This biased function includes the JavaScript definition,
+ * but also purposely includes `Date` and `DateTime`. My bias is that if you are using certain types as globally
+ * recognized building blocks, then they are primitive types. The only reason I can get away with this right now
+ * is because there is no such official thing as hashing in JavaScript. This could change later.
+ * @param target the instance to get the hash code for.
+ * @returns hash code.
+ */
 export const isPrimitiveType = (target: any): boolean => {
   return (
     typeof target === "string" ||
@@ -187,7 +285,10 @@ export const isPrimitiveType = (target: any): boolean => {
     typeof target === "bigint" ||
     typeof target === "boolean" ||
     typeof target === "symbol" ||
+    //These types will be put here for now... might change my mind later
+    //This is not in-line with C#
     target instanceof Date ||
-    target instanceof DateTime
+    target instanceof DateTime ||
+    target instanceof Guid
   );
 };

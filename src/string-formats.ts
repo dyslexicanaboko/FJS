@@ -2,9 +2,11 @@
 //https://stackoverflow.com/questions/48621533/how-convert-date-format-in-javascript-reactjs
 //https://stackoverflow.com/questions/44784774/in-react-how-to-format-a-number-with-commas
 
-/* This module was copied here from a different project. This is why there are many unused
+/**
+ * This module was copied here from a different project. This is why there are many unused
  * functions in this file. Needs to be reviewed, but anything string formatting related
- * is going here. */
+ * is going here.
+ */
 const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "2-digit",
