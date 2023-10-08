@@ -7,6 +7,7 @@ import BoxObject from "./BoxObject.js";
  * I am shamelessly copying the example from the documentation
  * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.iequalitycomparer-1
  * https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.equalitycomparer-1
+ * @class BoxEqualityComparer
  */
 export default class BoxEqualityComparer
   implements IEqualityComparer<BoxObject>

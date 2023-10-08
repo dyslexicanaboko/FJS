@@ -1,16 +1,17 @@
 /**
  * When searching an array, it is sometimes convenient to be able to return
  * the value and index if found. If they are not found then the default
- * values of undefined and -1 should be returned respectively.
- * */
+ * values of `undefined` and `-1` should be returned respectively.
+ * @type {ElementType<T>}
+ */
 export type ElementType<T> = {
   index: number;
   value: T | undefined;
 };
 
 /**
- * @enum {number}
  * Enumeration for keeping track of which comparer mode is being used.
+ * @enum {number}
  */
 export enum ComparerMode {
   //Default comparer is always used initially unless it can be changed.

@@ -1,6 +1,7 @@
 /**
  * This object exists without ways to perform equality and comparison on purpose to
  * demonstrate how to implement the IEqualityComparer<T> interface.
+ * @class ComparableObject
  */
 export default class ComparableObject {
   private _length: number;

@@ -13,6 +13,7 @@
  * -----
  *
  * But in this case using an interface will be fine since this is all a foreign concept anyhow.
+ * @interface IEqualityComparer<T>
  */
 export default interface IEqualityComparer<T> {
   equals(x: T | undefined, y: T | undefined): boolean;
