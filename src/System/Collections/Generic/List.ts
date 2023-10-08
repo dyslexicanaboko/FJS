@@ -429,6 +429,7 @@ export default class List<T> {
    */
   removeRange(index: number, count: number): void {
     this.isInBounds(index);
+    this.isInBounds(index + count);
 
     this._arr.splice(index, count);
 
