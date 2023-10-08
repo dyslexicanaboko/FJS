@@ -72,9 +72,10 @@ export default class List<T> {
     return element === undefined;
   }
 
+  //This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function
+  //in JavaScript.
   /**
-   * This comes from `System.Linq`, but it is so useful I am including it. There isn't a notion of an extension function
-   * in JavaScript.
+   * Test if the list contains any elements.
    * @returns {boolean} True if the list has at least one element, false otherwise
    */
   any(): boolean {
