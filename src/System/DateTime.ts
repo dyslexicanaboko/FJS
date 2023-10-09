@@ -382,15 +382,17 @@ export default class DateTime {
   //The default Date.toString() output is trash - I don't know ANYONE who thinks this is helpful
   //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toString
   //Ex: "Wed Oct 05 2011 16:48:00 GMT+0200 (CEST)"
+  //ISO-8601 format or GTFO -> https://xkcd.com/1179/
   /**
-   * String representation of the DateTime object using the biased format of M/d/yyy HH:mm:ss.
-   * @returns DateTime as a string.
+   * String representation of the DateTime object using the ISO-8601 format of yyyy-MM-dd HH:mm:ss.
+   * https://www.iso.org/iso-8601-date-and-time-format.html
+   * @returns DateTime as a ISO-8601 string.
    */
   toString(): string {
     //C#'s DateTime.ToString() format depends on the user's OS's preferences. I am going to provide bias here for argument's sake.
-    //M/d/yyy HH:mm:ss -> Ex: 9/1/2023 22:53:50
+    //yyyy/MM/dd HH:mm:ss -> Ex: 2023/09/01 22:53:50
 
-    return `${this.month}/${this.day}/${this.year} ${formatTimeStamp(
+    return `${this.year}/${this.month}/${this.day} ${formatTimeStamp(
       this.hour,
       this.minute,
       this.second
