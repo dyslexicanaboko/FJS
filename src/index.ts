@@ -37,7 +37,7 @@ const getDictionary = (
 //getDictionary(10);
 
 //console.log(crypto.randomBytes(20).toString("hex"));
-console.log(crypto.randomUUID());
+//console.log(crypto.randomUUID());
 
 // console.log("number", getHashCodeForAny(10));
 // console.log("boolean", getHashCodeForAny(true));
